@@ -1,4 +1,4 @@
-#include "NetworkScanner.hpp"
+#include "RequestProcessors/NetworkScanner.hpp"
 
 #include <iostream>
 #include <PcapLiveDeviceList.h>

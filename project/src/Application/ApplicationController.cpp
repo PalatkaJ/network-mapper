@@ -1,9 +1,9 @@
-#include "ApplicationController.hpp"
+#include "Application/ApplicationController.hpp"
 #include "cxxopts.hpp"
 
-#include "../RequestProcessors/RequestProcessor.hpp"
-#include "../RequestProcessors/NetworkScanner.hpp"
-#include "ScanRequest.hpp"
+#include "RequestProcessors/RequestProcessor.hpp"
+#include "RequestProcessors/NetworkScanner.hpp"
+#include "Application/ScanRequest.hpp"
 
 std::unique_ptr<netmap::RequestProcessor>
 netmap::ApplicationController::GetRequestedProcessor(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
