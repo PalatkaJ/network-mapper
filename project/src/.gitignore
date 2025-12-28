@@ -1,4 +1,2 @@
-cmake-build-debug/*
 .DS_Store
-.idea/*
 network-mapper
