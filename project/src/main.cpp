@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     try {
         const cxxopts::ParseResult result = options.parse(argc, argv);
-        netmap::ApplicationController::Run(options, result);
+        ApplicationController::Run(options, result);
     } catch (const cxxopts::exceptions::specification &se) {
         std::cerr << "Error in option specification: " << se.what() << std::endl << options.help() << std::endl;
         return RUNTIME_ERROR_CODE;

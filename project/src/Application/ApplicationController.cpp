@@ -1,16 +1,16 @@
 #include "Application/ApplicationController.hpp"
 #include "cxxopts.hpp"
 
-#include "RequestProcessors/RequestProcessor.hpp"
-#include "RequestProcessors/NetworkScanner.hpp"
-#include "Application/ScanRequest.hpp"
+#include "RequestProcessor.hpp"
+#include "InterfaceScanningProcessor.hpp"
+#include "ScanRequest.hpp"
 
 std::unique_ptr<netmap::RequestProcessor>
-netmap::ApplicationController::GetRequestedProcessor(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
+ApplicationController::GetRequestedProcessor(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
 
     ScanRequest request;
     if (result.count("help") != 0) {
-        return std::make_unique<HelpProvider>(options.help());
+        return std::make_unique<netmap::HelpProvider>(options.help());
     }
 
     if (result.count("interface") != 0) {
@@ -23,10 +23,10 @@ netmap::ApplicationController::GetRequestedProcessor(const cxxopts::Options &opt
         throw cxxopts::exceptions::specification("Invalid arguments");
     }
 
-    return std::make_unique<NetworkScanner>(std::move(request));
+    return std::make_unique<netmap::InterfaceScanningProcessor>(std::move(request));
 }
 
-void netmap::ApplicationController::Run(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
+void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
     const auto request_processor = GetRequestedProcessor(options, result);
 
     request_processor->Process();
