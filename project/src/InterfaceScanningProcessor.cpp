@@ -79,5 +79,5 @@ void netmap::InterfaceScanningProcessor::Process() {
 
     auto arp_scanner = ArpScanner{wrappedDev};
 
-    arp_scanner.Process();
+    arp_scanner.ScanNetwork();
 }

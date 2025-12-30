@@ -4,6 +4,7 @@
 
 #include "EthLayer.h"
 #include "Packet.h"
+#include "ReplyHandler.hpp"
 
 pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
     auto starting_ip = wrappedDev_.device->getIPv4Address() & wrappedDev_.netmask;
@@ -15,13 +16,16 @@ pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
 // maybe define operator for this
 void netmap::ArpScanner::IncrementIpAddress(pcpp::IPv4Address& ip) {
     // net to host and increment
-    uint32_t ip_h = ntohl(ip.toInt()) + 1;
+    uint32_t ip_h = GetHostIntFromNetIp(ip) + 1;
 
     // back to net
     ip = htonl(ip_h);
 }
 
-void netmap::ArpScanner::ProcessIp(const pcpp::IPv4Address &ip) const {
+// this is one function and not two because we would have to allocate a lot of stuff
+// on the heap to return the built packet from this function, since there
+// are a lot of dependencies (such as the layers)
+void netmap::ArpScanner::BuildAndSendArpPacket(const pcpp::IPv4Address &ip) const {
     pcpp::ArpRequest request{
         wrappedDev_.device->getMacAddress(),
         wrappedDev_.device->getIPv4Address(),
@@ -31,53 +35,58 @@ void netmap::ArpScanner::ProcessIp(const pcpp::IPv4Address &ip) const {
     pcpp::EthLayer ethLayer(wrappedDev_.device->getMacAddress(), pcpp::MacAddress::Broadcast);
     pcpp::ArpLayer arpLayer(request);
 
-    pcpp::Packet arpPacket(100); // create a packet of capacity 100 - this will grow automatically
+    pcpp::Packet arp_packet(100); // create a packet of capacity 100 - this will grow automatically
 
-    arpPacket.addLayer(&ethLayer);
-    arpPacket.addLayer(&arpLayer);
+    arp_packet.addLayer(&ethLayer);
+    arp_packet.addLayer(&arpLayer);
 
-    arpPacket.computeCalculateFields();
+    arp_packet.computeCalculateFields();
 
-    wrappedDev_.device->sendPacket(*arpPacket.getRawPacket());
+    wrappedDev_.device->sendPacket(*arp_packet.getRawPacket());
 }
 
 uint32_t netmap::ArpScanner::GetHostIntFromNetIp(const pcpp::IPv4Address &ip) {
     return ntohl(ip.toInt());
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev): wrappedDev_(wrappedDev) {}
-
-
-void netmap::ArpScanner::Process() const {
+void netmap::ArpScanner::SendArpRequests() const {
     auto current_ip = GetStartingIpAddress();
 
-    uint32_t current_ip_int;
-
-    wrappedDev_.device->open();
-
+    // this would look really cool if I could do sth like for (auto ip: available_addresses) {...}
     while ((GetHostIntFromNetIp(current_ip) | GetHostIntFromNetIp(wrappedDev_.netmask)) < UINT_MAX) {
-        ProcessIp(current_ip);
+        BuildAndSendArpPacket(current_ip);
 
         IncrementIpAddress(current_ip);
     }
+}
 
+netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev): wrappedDev_(wrappedDev) {}
 
+void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
     pcpp::ArpFilter arp_filter{pcpp::ARP_REPLY};
     wrappedDev_.device->setFilter(arp_filter);
+}
 
-    pcpp::RawPacketVector packets;
-    wrappedDev_.device->startCapture(packets);
+void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
+    const pcpp::Packet parsed_packet{rawPacket};
+
+    const auto reply_handler = static_cast<ReplyHandler *>(cookie);
+
+    reply_handler->ProcessArpReply(parsed_packet);
+}
+
+void netmap::ArpScanner::ScanNetwork() const {
+    wrappedDev_.device->open();
+
+    PrepareDeviceForArpCapture();
+    ReplyHandler stats;
+    std::cout << "starting scanning the network: " << std::endl;
+    wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
+
+    SendArpRequests();
 
     std::this_thread::sleep_for(static_cast<std::chrono::seconds>(5));
     wrappedDev_.device->stopCapture();
-
-    std::ranges::for_each(packets.begin(), packets.end(), [](auto &packet) {
-        pcpp::Packet parsed_packet{packet};
-        auto eth_layer = parsed_packet.getLayerOfType<pcpp::EthLayer>();
-        //auto ip_layer = parsed_packet.getLayerOfType<pcpp::IPv4Layer>();
-        std::cout << "source mac: " << eth_layer->getSourceMac()
-        << "; dest mac: " << eth_layer->getDestMac() << std::endl;
-    });
 
     wrappedDev_.device->close();
 }

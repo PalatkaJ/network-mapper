@@ -10,15 +10,19 @@ namespace netmap {
     private:
         PcapLiveDeviceWrapper& wrappedDev_;
 
-        pcpp::IPv4Address GetStartingIpAddress() const;
+        [[nodiscard]] pcpp::IPv4Address GetStartingIpAddress() const;
         static void IncrementIpAddress(pcpp::IPv4Address& ip);
-        void ProcessIp(const pcpp::IPv4Address& ip) const;
+        void BuildAndSendArpPacket(const pcpp::IPv4Address& ip) const;
         static uint32_t GetHostIntFromNetIp(const pcpp::IPv4Address& ip);
+
+        void SendArpRequests() const;
+        void PrepareDeviceForArpCapture() const;
+        static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
         explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev);
 
-        void Process() const;
+        void ScanNetwork() const;
     };
 }
 

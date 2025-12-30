@@ -1,3 +1,4 @@
 .idea/*
 temp/*
 cmake-build-debug/*
+count_size.py
