@@ -1,6 +1,7 @@
 #include "ArpScanner.hpp"
 
 #include <IPv4Layer.h>
+#include <arpa/inet.h>
 
 #include "EthLayer.h"
 #include "Packet.h"
