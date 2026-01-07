@@ -2,7 +2,7 @@
 set -e
 
 if [ -z "$VCPKG_ROOT" ]; then
-    echo "Error: VCPKG_ROOT is not set. Download it if necessary and set the env variable."
+    echo "Error: VCPKG_ROOT is not set. Download it if necessary and set the env variable.\n See more information about vcpkg here: https://github.com/microsoft/vcpkg"
     exit 1
 fi
 
