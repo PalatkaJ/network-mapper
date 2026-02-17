@@ -7,7 +7,6 @@ namespace netmap {
     public:
         void ProcessArpReply(const pcpp::Packet& parsedPacket) const;
     };
-
 }
 
 #endif //REPLY_HANDLER_HPP

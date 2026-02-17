@@ -2,6 +2,7 @@
 #define ARPSCANNER_HPP
 #include <iostream>
 
+#include "Logger.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
 
 
@@ -9,6 +10,7 @@ namespace netmap {
     class ArpScanner {
     private:
         PcapLiveDeviceWrapper& wrappedDev_;
+        Logger& logger_;
 
         [[nodiscard]] pcpp::IPv4Address GetStartingIpAddress() const;
         static void IncrementIpAddress(pcpp::IPv4Address& ip);
@@ -20,7 +22,7 @@ namespace netmap {
         static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev);
+        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, Logger& logger);
 
         void ScanNetwork() const;
     };

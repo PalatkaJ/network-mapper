@@ -1,6 +1,7 @@
 #include "InterfaceScanningProcessor.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
 #include "ArpScanner.hpp"
+#include "Logger.hpp"
 
 #include <iostream>
 #include <PcapLiveDeviceList.h>
@@ -10,20 +11,21 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <ifaddrs.h>
+#include <format>
 
-void netmap::InterfaceScanningProcessor::PrintInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev) {
-    std::cout
-            << "Interface info:" << std::endl
-            << "   Interface IPv4:        " << wrappedDev.device->getIPv4Address() << std::endl
-            << "   Interface name:        " << wrappedDev.device->getName() << std::endl
-            << "   Interface netmask:     " << wrappedDev.netmask << std::endl
-            << "   Interface description: " << wrappedDev.device->getDesc() << std::endl
-            << "   MAC address:           " << wrappedDev.device->getMacAddress() << std::endl
-            << "   Default gateway:       " << wrappedDev.device->getDefaultGateway() << std::endl
-            << "   Interface MTU:         " << wrappedDev.device->getMtu() << std::endl;
+void netmap::InterfaceScanningProcessor::LogInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev) {
+
+    logger_.VerboseLog("Interface info:");
+    logger_.VerboseLog(std::format("   Interface IPv4:        {}", wrappedDev.device->getIPv4Address().toString()));
+    logger_.VerboseLog(std::format("   Interface name:        {}", wrappedDev.device->getName()));
+    logger_.VerboseLog(std::format("   Interface netmask:     {}", wrappedDev.netmask.toString()));
+    logger_.VerboseLog(std::format("   Interface description: {}", wrappedDev.device->getDesc()));
+    logger_.VerboseLog(std::format("   MAC address:           {}", wrappedDev.device->getMacAddress().toString()));
+    logger_.VerboseLog(std::format("   Default gateway:       {}", wrappedDev.device->getDefaultGateway().toString()));
+    logger_.VerboseLog(std::format("   Interface MTU:         {}", wrappedDev.device->getMtu()));
 
     if (!wrappedDev.device->getDnsServers().empty()) {
-        std::cout << "   DNS server:            " << wrappedDev.device->getDnsServers().front() << std::endl;
+        logger_.VerboseLog(std::format("   DNS server:            {}", wrappedDev.device->getDnsServers().front().toString()));
     }
 }
 
@@ -61,10 +63,12 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
     throw std::runtime_error("couldn't find netmask for given interface");
 }
 
-netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(ScanRequest &&scan_request): scan_request_(std::move(scan_request)) {
-}
+netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(ScanRequest &&scan_request, Logger &logger)
+    :scan_request_(std::move(scan_request)), logger_(logger) {}
 
 void netmap::InterfaceScanningProcessor::Process() {
+    logger_.VerboseLog(std::format("Trying to find interface: {}", scan_request_.interface_name));
+
     auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(scan_request_.interface_name);
     if (dev == nullptr) {
         throw std::runtime_error("Cannot find interface");
@@ -75,9 +79,9 @@ void netmap::InterfaceScanningProcessor::Process() {
     // wrap the device so it contains the netmask as well
     PcapLiveDeviceWrapper wrappedDev(dev, netmask);
 
-    PrintInterfaceInformation(wrappedDev);
+    LogInterfaceInformation(wrappedDev);
 
-    auto arp_scanner = ArpScanner{wrappedDev};
+    auto arp_scanner = ArpScanner{wrappedDev, logger_};
 
     arp_scanner.ScanNetwork();
 }

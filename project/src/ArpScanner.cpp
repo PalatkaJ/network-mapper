@@ -6,6 +6,7 @@
 #include "EthLayer.h"
 #include "Packet.h"
 #include "ReplyHandler.hpp"
+#include "Logger.hpp"
 
 pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
     auto starting_ip = wrappedDev_.device->getIPv4Address() & wrappedDev_.netmask;
@@ -53,6 +54,7 @@ uint32_t netmap::ArpScanner::GetHostIntFromNetIp(const pcpp::IPv4Address &ip) {
 void netmap::ArpScanner::SendArpRequests() const {
     auto current_ip = GetStartingIpAddress();
 
+    logger_.VerboseLog("Sending arp requests...");
     // this would look really cool if I could do sth like for (auto ip: available_addresses) {...}
     while ((GetHostIntFromNetIp(current_ip) | GetHostIntFromNetIp(wrappedDev_.netmask)) < UINT_MAX) {
         BuildAndSendArpPacket(current_ip);
@@ -61,9 +63,10 @@ void netmap::ArpScanner::SendArpRequests() const {
     }
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev): wrappedDev_(wrappedDev) {}
+netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, Logger& logger): wrappedDev_(wrappedDev), logger_(logger) {}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
+    logger_.VerboseLog("Preparing device for arp capture...");
     pcpp::ArpFilter arp_filter{pcpp::ARP_REPLY};
     wrappedDev_.device->setFilter(arp_filter);
 }
@@ -81,12 +84,13 @@ void netmap::ArpScanner::ScanNetwork() const {
 
     PrepareDeviceForArpCapture();
     ReplyHandler stats;
-    std::cout << "starting scanning the network: " << std::endl;
+    logger_.VerboseLog("Starting network scan...");
     wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
 
     SendArpRequests();
 
     std::this_thread::sleep_for(static_cast<std::chrono::seconds>(5));
+    logger_.VerboseLog("Stopping network scan...");
     wrappedDev_.device->stopCapture();
 
     wrappedDev_.device->close();

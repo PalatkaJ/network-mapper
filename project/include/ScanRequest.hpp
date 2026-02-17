@@ -9,8 +9,8 @@ struct ScanRequest {
     /*
     uint16_t port = 0;
     int timeout_ms = 500;
-    bool verbose = false;
     */
+    bool verbose = false;
 
     [[nodiscard]] bool isValid() const;
 };

@@ -1,6 +1,8 @@
 #include "ReplyHandler.hpp"
 
 #include <iostream>
+#include <IPv4Layer.h>
+
 #include "ArpLayer.h"
 #include "Packet.h"
 

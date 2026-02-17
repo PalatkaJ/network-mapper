@@ -11,13 +11,14 @@ namespace netmap {
     class InterfaceScanningProcessor final : public RequestProcessor {
     private:
         ScanRequest scan_request_;
+        Logger& logger_;
 
-        static void PrintInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev);
+        void LogInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev);
         static bool IsInterestingIfa(const ifaddrs *ifa, const std::string& devName);
         static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
 
     public:
-        explicit InterfaceScanningProcessor(ScanRequest&& scan_request);
+        explicit InterfaceScanningProcessor(ScanRequest&& scan_request, Logger& logger);
 
         void Process() override;
     };

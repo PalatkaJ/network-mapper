@@ -10,11 +10,13 @@ int main(int argc, char *argv[]) {
 
     options.add_options()
             ("interface", "Network interface name to sniff on", cxxopts::value<std::string>())
-            ("help", "Print usage");
+            ("help", "Print usage")
+            ("verbose", "Print verbose messages");
 
     try {
         const cxxopts::ParseResult result = options.parse(argc, argv);
-        ApplicationController::Run(options, result);
+        ApplicationController application_controller;
+        application_controller.Run(options, result);
     } catch (const cxxopts::exceptions::specification &se) {
         std::cerr << "Error in option specification: " << se.what() << std::endl << options.help() << std::endl;
         return RUNTIME_ERROR_CODE;
@@ -23,6 +25,7 @@ int main(int argc, char *argv[]) {
         return RUNTIME_ERROR_CODE;
     } catch (const std::runtime_error &re) {
         std::cerr << "Error: " << re.what() << std::endl;
+        return RUNTIME_ERROR_CODE;
     }
 
     return 0;

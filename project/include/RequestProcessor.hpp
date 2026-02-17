@@ -1,6 +1,7 @@
 #ifndef OPTION_HANDLER_HPP
 #define OPTION_HANDLER_HPP
 #include "cxxopts.hpp"
+#include "Logger.hpp"
 
 
 namespace netmap {
