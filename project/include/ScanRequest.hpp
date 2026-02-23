@@ -6,9 +6,10 @@
 
 struct ScanRequest {
     std::string interface_name;
+    std::string output_filename;
+    uint32_t timeout_ms = 5000;
     /*
     uint16_t port = 0;
-    int timeout_ms = 500;
     */
     bool verbose = false;
 

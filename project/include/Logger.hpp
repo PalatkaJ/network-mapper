@@ -6,10 +6,11 @@
 
 class Logger {
     bool verbose_;
-    std::ostream& output_stream_;
+    std::unique_ptr<std::ostream> managed_out_;
+    std::ostream* out_;
 
 public:
-    Logger(bool verbose, std::ostream& output_stream);
+    Logger(bool verbose, std::unique_ptr<std::ostream> output_stream);
 
     void VerboseLog(std::string_view msg) const;
     void Log(std::string_view msg) const;

@@ -1,18 +1,22 @@
 
 #include "Logger.hpp"
+#include <chrono>
+#include <iostream>
 
 void Logger::VerboseLog(std::string_view msg) const {
     if (verbose_) {
-        output_stream_ << msg << std::endl;
+        std::cerr << msg << std::endl;
     }
 }
 
 void Logger::Log(std::string_view msg) const {
-    output_stream_ << msg << std::endl;
+    *out_ << msg << std::endl;
 }
 
-Logger::Logger(bool verbose, std::ostream &output_stream)
-: verbose_(verbose), output_stream_(output_stream) {}
+Logger::Logger(bool verbose, std::unique_ptr<std::ostream> output_stream)
+: verbose_(verbose), managed_out_(std::move(output_stream)) {
+    out_ = managed_out_ == nullptr ? &std::cout : &*managed_out_;
+}
 
 
 

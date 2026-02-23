@@ -11,7 +11,10 @@ int main(int argc, char *argv[]) {
     options.add_options()
             ("interface", "Network interface name to sniff on", cxxopts::value<std::string>())
             ("help", "Print usage")
-            ("verbose", "Print verbose messages");
+            ("verbose", "Print verbose messages")
+            ("output", "Specify output file", cxxopts::value<std::string>())
+            ("timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
+                cxxopts::value<uint32_t>());
 
     try {
         const cxxopts::ParseResult result = options.parse(argc, argv);

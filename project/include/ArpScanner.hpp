@@ -11,6 +11,7 @@ namespace netmap {
     private:
         PcapLiveDeviceWrapper& wrappedDev_;
         Logger& logger_;
+        ScanRequest scan_request_;
 
         [[nodiscard]] pcpp::IPv4Address GetStartingIpAddress() const;
         static void IncrementIpAddress(pcpp::IPv4Address& ip);
@@ -22,7 +23,7 @@ namespace netmap {
         static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, Logger& logger);
+        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, Logger& logger, ScanRequest scan_request);
 
         void ScanNetwork() const;
     };

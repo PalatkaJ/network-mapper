@@ -63,7 +63,7 @@ void netmap::ArpScanner::SendArpRequests() const {
     }
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, Logger& logger): wrappedDev_(wrappedDev), logger_(logger) {}
+netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, Logger& logger, ScanRequest scan_request): wrappedDev_(wrappedDev), logger_(logger), scan_request_(scan_request) {}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
     logger_.VerboseLog("Preparing device for arp capture...");
@@ -83,13 +83,13 @@ void netmap::ArpScanner::ScanNetwork() const {
     wrappedDev_.device->open();
 
     PrepareDeviceForArpCapture();
-    ReplyHandler stats;
+    ReplyHandler stats{logger_};
     logger_.VerboseLog("Starting network scan...");
     wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
 
     SendArpRequests();
 
-    std::this_thread::sleep_for(static_cast<std::chrono::seconds>(5));
+    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(scan_request_.timeout_ms));
     logger_.VerboseLog("Stopping network scan...");
     wrappedDev_.device->stopCapture();
 
