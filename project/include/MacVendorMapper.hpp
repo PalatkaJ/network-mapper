@@ -1,0 +1,28 @@
+#ifndef NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP
+#define NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP
+#include <MacAddress.h>
+#include <unordered_map>
+
+#include "Logger.hpp"
+
+namespace netmap {
+
+    constexpr uint8_t LOCALLY_ADMINISTERED_MASK = 0x02;
+
+    class MacVendorMapper {
+        std::string csv_filename_;
+        Logger& logger_;
+        std::unordered_map<std::string, std::string> mac_vendor_map_;
+
+        static std::string ParseVendorName(const std::vector<std::string>& fields, const std::string& entry);
+        static bool IsLocallyAdministrated(pcpp::MacAddress mac_address);
+
+        void ProcessLineEntry(const std::string& entry);
+    public:
+        explicit MacVendorMapper(std::string&& csv_filename, Logger& logger);
+        void Map();
+        std::string GetVendorName(pcpp::MacAddress mac_address);
+    };
+}
+
+#endif //NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP

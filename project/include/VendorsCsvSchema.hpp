@@ -1,0 +1,12 @@
+#ifndef NETWORK_MAPPER_VENDORS_CSV_SCHEMA_HPP
+#define NETWORK_MAPPER_VENDORS_CSV_SCHEMA_HPP
+
+#include <cstddef>
+
+constexpr char CSV_HEX_SEPARATOR = ':';
+constexpr char CSV_SEPARATOR = ',';
+constexpr size_t MAC_PREFIX_INDEX = 0;
+constexpr size_t VENDOR_NAME_INDEX = 1;
+constexpr size_t CSV_COLUMNS_COUNT = 5;
+
+#endif //NETWORK_MAPPER_VENDORS_CSV_SCHEMA_HPP

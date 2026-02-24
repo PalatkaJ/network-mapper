@@ -3,10 +3,13 @@
 #include <IPv4Layer.h>
 #include <arpa/inet.h>
 
+#include <utility>
+
 #include "EthLayer.h"
 #include "Packet.h"
 #include "ReplyHandler.hpp"
 #include "Logger.hpp"
+#include "MacVendorMapper.hpp"
 
 pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
     auto starting_ip = wrappedDev_.device->getIPv4Address() & wrappedDev_.netmask;
@@ -63,7 +66,8 @@ void netmap::ArpScanner::SendArpRequests() const {
     }
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, Logger& logger, ScanRequest scan_request): wrappedDev_(wrappedDev), logger_(logger), scan_request_(scan_request) {}
+netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, ScanRequest scan_request)
+    : wrappedDev_(wrappedDev), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), scan_request_(std::move(scan_request)) {}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
     logger_.VerboseLog("Preparing device for arp capture...");
@@ -83,7 +87,7 @@ void netmap::ArpScanner::ScanNetwork() const {
     wrappedDev_.device->open();
 
     PrepareDeviceForArpCapture();
-    ReplyHandler stats{logger_};
+    ReplyHandler stats{mac_vendor_mapper_, logger_};
     logger_.VerboseLog("Starting network scan...");
     wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
 

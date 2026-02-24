@@ -3,13 +3,14 @@
 #include <iostream>
 
 #include "Logger.hpp"
+#include "MacVendorMapper.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
 
 
 namespace netmap {
     class ArpScanner {
-    private:
         PcapLiveDeviceWrapper& wrappedDev_;
+        MacVendorMapper& mac_vendor_mapper_;
         Logger& logger_;
         ScanRequest scan_request_;
 
@@ -23,7 +24,7 @@ namespace netmap {
         static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, Logger& logger, ScanRequest scan_request);
+        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, ScanRequest scan_request);
 
         void ScanNetwork() const;
     };

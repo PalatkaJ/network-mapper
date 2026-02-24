@@ -3,12 +3,14 @@
 #include <Packet.h>
 
 #include "Logger.hpp"
+#include "MacVendorMapper.hpp"
 
 namespace netmap {
     class ReplyHandler {
+        MacVendorMapper& mac_vendor_mapper_;
         Logger& logger_;
     public:
-        explicit ReplyHandler(Logger& logger);
+        explicit ReplyHandler(MacVendorMapper& mac_vendor_mapper, Logger& logger);
         void ProcessArpReply(const pcpp::Packet& parsedPacket) const;
     };
 }

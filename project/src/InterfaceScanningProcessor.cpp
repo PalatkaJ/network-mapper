@@ -2,6 +2,7 @@
 #include "PcapLiveDeviceWrapper.hpp"
 #include "ArpScanner.hpp"
 #include "Logger.hpp"
+#include "MacVendorMapper.hpp"
 
 #include <iostream>
 #include <PcapLiveDeviceList.h>
@@ -83,7 +84,9 @@ void netmap::InterfaceScanningProcessor::Process() {
 
     LogInterfaceInformation(wrappedDev);
 
-    auto arp_scanner = ArpScanner{wrappedDev, logger_, std::move(scan_request_)};
+    auto mac_vendor_mapper = MacVendorMapper{"mac-vendors-export.csv", logger_};
+    mac_vendor_mapper.Map();
+    auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, std::move(scan_request_)};
 
     arp_scanner.ScanNetwork();
 }
