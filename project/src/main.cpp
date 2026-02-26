@@ -1,8 +1,8 @@
 #include <cxxopts.hpp>
 #include <iostream>
 
-#include "Application/ApplicationController.hpp"
-#include "Application/ApplicationConstants.hpp"
+#include "ApplicationController.hpp"
+#include "ApplicationConstants.hpp"
 
 int main(int argc, char *argv[]) {
     auto options = cxxopts::Options("network-mapper",

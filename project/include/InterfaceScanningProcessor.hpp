@@ -13,7 +13,6 @@ namespace netmap {
         ScanRequest scan_request_;
         Logger& logger_;
 
-        void LogInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev);
         static bool IsInterestingIfa(const ifaddrs *ifa, const std::string& devName);
         static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
 

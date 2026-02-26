@@ -83,7 +83,7 @@ void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcp
     reply_handler->ProcessArpReply(parsed_packet);
 }
 
-void netmap::ArpScanner::ScanNetwork() const {
+std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() {
     wrappedDev_.device->open();
 
     PrepareDeviceForArpCapture();
@@ -94,10 +94,11 @@ void netmap::ArpScanner::ScanNetwork() const {
     SendArpRequests();
 
     std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(scan_request_.timeout_ms));
-    logger_.VerboseLog("Stopping network scan...");
     wrappedDev_.device->stopCapture();
-
     wrappedDev_.device->close();
+
+    logger_.VerboseLog("Finished network scan...");
+    return stats.GetArpDevices();
 }
 
 

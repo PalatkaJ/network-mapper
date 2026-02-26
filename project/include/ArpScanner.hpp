@@ -2,6 +2,7 @@
 #define ARPSCANNER_HPP
 #include <iostream>
 
+#include "ArpDeviceInfo.hpp"
 #include "Logger.hpp"
 #include "MacVendorMapper.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
@@ -26,7 +27,7 @@ namespace netmap {
     public:
         explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, ScanRequest scan_request);
 
-        void ScanNetwork() const;
+        std::vector<ArpDeviceInfo> ScanNetwork();
     };
 }
 

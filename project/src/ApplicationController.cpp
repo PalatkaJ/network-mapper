@@ -1,4 +1,4 @@
-#include "Application/ApplicationController.hpp"
+#include "ApplicationController.hpp"
 
 #include <fstream>
 #include <iostream>

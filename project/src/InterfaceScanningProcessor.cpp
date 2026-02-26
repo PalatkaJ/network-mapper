@@ -14,21 +14,7 @@
 #include <ifaddrs.h>
 #include <format>
 
-void netmap::InterfaceScanningProcessor::LogInterfaceInformation(const PcapLiveDeviceWrapper &wrappedDev) {
-
-    logger_.Log("Interface info:");
-    logger_.Log(std::format("   Interface IPv4:        {}", wrappedDev.device->getIPv4Address().toString()));
-    logger_.Log(std::format("   Interface name:        {}", wrappedDev.device->getName()));
-    logger_.Log(std::format("   Interface netmask:     {}", wrappedDev.netmask.toString()));
-    logger_.Log(std::format("   Interface description: {}", wrappedDev.device->getDesc()));
-    logger_.Log(std::format("   MAC address:           {}", wrappedDev.device->getMacAddress().toString()));
-    logger_.Log(std::format("   Default gateway:       {}", wrappedDev.device->getDefaultGateway().toString()));
-    logger_.Log(std::format("   Interface MTU:         {}", wrappedDev.device->getMtu()));
-
-    if (!wrappedDev.device->getDnsServers().empty()) {
-        logger_.Log(std::format("   DNS server:            {}", wrappedDev.device->getDnsServers().front().toString()));
-    }
-}
+#include "NetworkAsciPrinter.hpp"
 
 bool netmap::InterfaceScanningProcessor::IsInterestingIfa(const ifaddrs *ifa, const std::string &devName) {
     // AF_INET means IPv4, and it is the interface we were requested (by the name, e.g., eth0)
@@ -82,11 +68,12 @@ void netmap::InterfaceScanningProcessor::Process() {
     // wrap the device so it contains the netmask as well
     PcapLiveDeviceWrapper wrappedDev(dev, netmask);
 
-    LogInterfaceInformation(wrappedDev);
-
     auto mac_vendor_mapper = MacVendorMapper{"mac-vendors-export.csv", logger_};
     mac_vendor_mapper.Map();
-    auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, std::move(scan_request_)};
 
-    arp_scanner.ScanNetwork();
+    auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, std::move(scan_request_)};
+    auto scanned_devices = arp_scanner.ScanNetwork();
+
+    auto network_printer = NetworkAsciPrinter{wrappedDev, scanned_devices, logger_};
+    network_printer.PrettyPrint();
 }
