@@ -2,7 +2,7 @@
 #define LOGGER_HPP
 #include <ostream>
 
-#include "ScanRequest.hpp"
+#include "UserRequest.hpp"
 
 class Logger {
     bool verbose_;

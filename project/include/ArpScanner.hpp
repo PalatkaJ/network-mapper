@@ -13,7 +13,7 @@ namespace netmap {
         PcapLiveDeviceWrapper& wrappedDev_;
         MacVendorMapper& mac_vendor_mapper_;
         Logger& logger_;
-        ScanRequest scan_request_;
+        UserRequest *user_request_ptr_;
 
         [[nodiscard]] pcpp::IPv4Address GetStartingIpAddress() const;
         static void IncrementIpAddress(pcpp::IPv4Address& ip);
@@ -25,7 +25,7 @@ namespace netmap {
         static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, ScanRequest scan_request);
+        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, UserRequest *user_request);
 
         std::vector<ArpDeviceInfo> ScanNetwork();
     };

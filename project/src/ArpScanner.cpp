@@ -66,8 +66,8 @@ void netmap::ArpScanner::SendArpRequests() const {
     }
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, ScanRequest scan_request)
-    : wrappedDev_(wrappedDev), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), scan_request_(std::move(scan_request)) {}
+netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, UserRequest *user_request)
+    : wrappedDev_(wrappedDev), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), user_request_ptr_(user_request) {}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
     logger_.VerboseLog("Preparing device for arp capture...");
@@ -93,7 +93,7 @@ std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() {
 
     SendArpRequests();
 
-    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(scan_request_.timeout_ms));
+    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(user_request_ptr_->timeout_ms));
     wrappedDev_.device->stopCapture();
     wrappedDev_.device->close();
 

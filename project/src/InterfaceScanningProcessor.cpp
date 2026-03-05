@@ -50,13 +50,13 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
     throw std::runtime_error("couldn't find netmask for given interface");
 }
 
-netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(ScanRequest &&scan_request, Logger &logger)
-    :scan_request_(std::move(scan_request)), logger_(logger) {}
+netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(UserRequest *user_request, Logger &logger)
+    :user_request_(user_request), logger_(logger) {}
 
 void netmap::InterfaceScanningProcessor::Process() {
-    logger_.VerboseLog(std::format("Trying to find interface {}", scan_request_.interface_name));
+    logger_.VerboseLog(std::format("Trying to find interface {}", user_request_->interface_name));
 
-    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(scan_request_.interface_name);
+    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(user_request_->interface_name);
     if (dev == nullptr) {
         throw std::runtime_error("Cannot find interface");
     }
@@ -71,7 +71,7 @@ void netmap::InterfaceScanningProcessor::Process() {
     auto mac_vendor_mapper = MacVendorMapper{"mac-vendors-export.csv", logger_};
     mac_vendor_mapper.Map();
 
-    auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, std::move(scan_request_)};
+    auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, user_request_};
     auto scanned_devices = arp_scanner.ScanNetwork();
 
     auto network_printer = NetworkAsciPrinter{wrappedDev, scanned_devices, logger_};

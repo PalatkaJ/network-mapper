@@ -18,11 +18,6 @@ int main(int argc, char *argv[]) {
             ("r,route", "Traceroute provided ip address or domain name (e.g. 8.8.8.8 or google.com)", cxxopts::value<std::string>());
 
     try {
-        // TODO refactor this, so the steps are:
-        // rename ScanRequest to ArgOptions, initialize them
-        // then initialize the logger if everything is fine with ArgOptions
-        // then get the requested processor based on the ArgOptions
-        // then process the request ...
         const cxxopts::ParseResult result = options.parse(argc, argv);
         ApplicationController application_controller;
         application_controller.Run(options, result);

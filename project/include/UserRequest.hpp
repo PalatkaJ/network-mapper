@@ -4,7 +4,7 @@
 #include <string>
 
 
-struct ScanRequest {
+struct UserRequest {
     std::string interface_name;
     std::string output_filename;
     uint32_t timeout_ms = 5000;
@@ -12,11 +12,12 @@ struct ScanRequest {
     uint16_t port = 0;
     */
     bool verbose = false;
+    bool help = false;
 
     [[nodiscard]] bool isValid() const;
 };
 
-inline bool ScanRequest::isValid() const {
+inline bool UserRequest::isValid() const {
     return !interface_name.empty();
 }
 
