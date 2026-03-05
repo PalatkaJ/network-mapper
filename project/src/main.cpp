@@ -9,14 +9,20 @@ int main(int argc, char *argv[]) {
                                     "CL tool implementing subset of arp-scan functionality");
 
     options.add_options()
-            ("interface", "Network interface name to sniff on", cxxopts::value<std::string>())
-            ("help", "Print usage")
-            ("verbose", "Print verbose messages")
-            ("output", "Specify output file", cxxopts::value<std::string>())
-            ("timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
-                cxxopts::value<uint32_t>());
+            ("i,interface", "Network interface name to sniff on", cxxopts::value<std::string>())
+            ("h,help", "Print usage")
+            ("v,verbose", "Print verbose messages")
+            ("o,output", "Specify output file", cxxopts::value<std::string>())
+            ("t,timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
+                cxxopts::value<uint32_t>())
+            ("r,route", "Traceroute provided ip address or domain name (e.g. 8.8.8.8 or google.com)", cxxopts::value<std::string>());
 
     try {
+        // TODO refactor this, so the steps are:
+        // rename ScanRequest to ArgOptions, initialize them
+        // then initialize the logger if everything is fine with ArgOptions
+        // then get the requested processor based on the ArgOptions
+        // then process the request ...
         const cxxopts::ParseResult result = options.parse(argc, argv);
         ApplicationController application_controller;
         application_controller.Run(options, result);
