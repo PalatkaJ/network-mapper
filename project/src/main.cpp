@@ -6,16 +6,16 @@
 
 int main(int argc, char *argv[]) {
     auto options = cxxopts::Options("network-mapper",
-                                    "CL tool implementing subset of arp-scan functionality");
+                                    "CL tool implementing subset of arp-scan and traceroute functionality");
 
     options.add_options()
             ("i,interface", "Network interface name to sniff on", cxxopts::value<std::string>())
             ("h,help", "Print usage")
             ("v,verbose", "Print verbose messages")
             ("o,output", "Specify output file", cxxopts::value<std::string>())
-            ("t,timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
+            ("timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
                 cxxopts::value<uint32_t>())
-            ("r,route", "Traceroute provided ip address or domain name (e.g. 8.8.8.8 or google.com)", cxxopts::value<std::string>());
+            ("traceroute", "Trace the route to the provided IP address or domain name.", cxxopts::value<std::string>());
 
     try {
         const cxxopts::ParseResult result = options.parse(argc, argv);

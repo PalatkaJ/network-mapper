@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-netmap::HelpProvider::HelpProvider(std::string help)
+netmap::HelpProcessor::HelpProcessor(std::string help)
     : help_(std::move(help)) {
 }
 
-void netmap::HelpProvider::Process() {
+void netmap::HelpProcessor::Process() {
     std::cout << help_ << std::endl;
 }

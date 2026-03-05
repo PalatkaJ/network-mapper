@@ -7,13 +7,13 @@
 class ApplicationController {
     std::unique_ptr<Logger> logger_;
 
-    void InitializeLogger(UserRequest *request);
+    void InitializeLogger(const netmap::UserRequest &request);
 
-    [[nodiscard]] static std::unique_ptr<UserRequest> ParseUserRequest(const cxxopts::ParseResult &result) ;
-
+    [[nodiscard]] static std::unique_ptr<netmap::UserRequest> ParseUserRequest(const cxxopts::ParseResult &result) ;
+    [[nodiscard]] static bool ValidateUserRequest(const netmap::UserRequest &request);
 
 public:
-    [[nodiscard]] std::unique_ptr<netmap::RequestProcessor> GetRequestedProcessor(UserRequest *user_request, const cxxopts::Options &options) const;
+    [[nodiscard]] std::unique_ptr<netmap::RequestProcessor> GetRequestedProcessor(const netmap::UserRequest &user_request, const cxxopts::Options &options) const;
 
     void Run(const cxxopts::Options &options, const cxxopts::ParseResult &result);
 };

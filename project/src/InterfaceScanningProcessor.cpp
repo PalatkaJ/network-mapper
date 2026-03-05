@@ -50,13 +50,13 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
     throw std::runtime_error("couldn't find netmask for given interface");
 }
 
-netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(UserRequest *user_request, Logger &logger)
+netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(const UserRequest &user_request, Logger &logger)
     :user_request_(user_request), logger_(logger) {}
 
 void netmap::InterfaceScanningProcessor::Process() {
-    logger_.VerboseLog(std::format("Trying to find interface {}", user_request_->interface_name));
+    logger_.VerboseLog(std::format("Trying to find interface {}", user_request_.interface_name));
 
-    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(user_request_->interface_name);
+    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(user_request_.interface_name);
     if (dev == nullptr) {
         throw std::runtime_error("Cannot find interface");
     }

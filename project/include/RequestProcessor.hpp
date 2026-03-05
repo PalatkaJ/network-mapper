@@ -12,11 +12,11 @@ namespace netmap {
         virtual void Process() = 0;
     };
 
-    class HelpProvider final : public RequestProcessor {
+    class HelpProcessor final : public RequestProcessor {
         std::string help_;
 
     public:
-        explicit HelpProvider(std::string help);
+        explicit HelpProcessor(std::string help);
 
         void Process() override;
     };
