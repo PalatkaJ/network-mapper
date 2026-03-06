@@ -26,7 +26,7 @@ ApplicationController::GetRequestedProcessor(const netmap::UserRequest &user_req
         return std::make_unique<netmap::InterfaceScanningProcessor>(user_request, *logger_);
     }
 
-    return std::make_unique<netmap::TracerouteProcessor>(*logger_);
+    return std::make_unique<netmap::TracerouteProcessor>(user_request, *logger_);
 }
 
 void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::ParseResult &result) {
@@ -35,7 +35,12 @@ void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::
 
     const auto request_processor = GetRequestedProcessor(*user_request_ptr, options);
 
-    request_processor->Process();
+    try {
+        request_processor->Process();
+    } catch (const std::exception &e) {
+        auto processor = netmap::InvalidRequestProcessor{*logger_};
+        processor.Process();
+    }
 }
 
 void ApplicationController::InitializeLogger(const netmap::UserRequest &request) {
