@@ -12,7 +12,7 @@ namespace netmap {
         const UserRequest &user_request_;
         Logger& logger_;
 
-        static bool IsInterestingIfa(const ifaddrs *ifa, const std::string& devName);
+        static bool IsTargetIfa(const ifaddrs *ifa, const std::string& devName);
         static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
 
     public:

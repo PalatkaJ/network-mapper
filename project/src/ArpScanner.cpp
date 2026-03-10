@@ -7,7 +7,7 @@
 
 #include "EthLayer.h"
 #include "Packet.h"
-#include "ReplyHandler.hpp"
+#include "ArpReplyHandler.hpp"
 #include "Logger.hpp"
 #include "MacVendorMapper.hpp"
 
@@ -37,13 +37,13 @@ void netmap::ArpScanner::BuildAndSendArpPacket(const pcpp::IPv4Address &ip) cons
         ip,
     };
 
-    pcpp::EthLayer ethLayer(wrappedDev_.device->getMacAddress(), pcpp::MacAddress::Broadcast);
-    pcpp::ArpLayer arpLayer(request);
+    pcpp::EthLayer eth_layer(wrappedDev_.device->getMacAddress(), pcpp::MacAddress::Broadcast);
+    pcpp::ArpLayer arp_layer(request);
 
     pcpp::Packet arp_packet(100); // create a packet of capacity 100 - this will grow automatically
 
-    arp_packet.addLayer(&ethLayer);
-    arp_packet.addLayer(&arpLayer);
+    arp_packet.addLayer(&eth_layer);
+    arp_packet.addLayer(&arp_layer);
 
     arp_packet.computeCalculateFields();
 
@@ -78,7 +78,7 @@ void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
 void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
     const pcpp::Packet parsed_packet{rawPacket};
 
-    const auto reply_handler = static_cast<ReplyHandler *>(cookie);
+    const auto reply_handler = static_cast<ArpReplyHandler *>(cookie);
 
     reply_handler->ProcessArpReply(parsed_packet);
 }
@@ -87,7 +87,7 @@ std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() {
     wrappedDev_.device->open();
 
     PrepareDeviceForArpCapture();
-    ReplyHandler stats{mac_vendor_mapper_, logger_};
+    ArpReplyHandler stats{mac_vendor_mapper_, logger_};
     logger_.VerboseLog("Starting network scan...");
     wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
 

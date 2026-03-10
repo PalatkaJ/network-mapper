@@ -1,12 +1,71 @@
 #include "RouteTracer.hpp"
-#include <format>
-#include <ifaddrs.h>
 
-netmap::RouteTracer::RouteTracer(pcpp::IPAddress dest_ip, Logger &logger)
-    : dest_ip_(dest_ip), logger_(logger){}
+#include <EthLayer.h>
+#include <format>
+#include <IPLayer.h>
+#include <IPv4Layer.h>
+#include <IcmpLayer.h>
+#include <PcapLiveDeviceList.h>
+#include <NetworkUtils.h>
+#include <Packet.h>
+
+#include "IcmpReplyHandler.hpp"
+
+netmap::RouteTracer::RouteTracer(pcpp::IPv4Address source_ip, pcpp::IPv4Address dest_ip, Logger &logger)
+    :source_ip_(source_ip), dest_ip_(dest_ip), logger_(logger){}
+
+void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress gateaway_mac) {
+
+    pcpp::EthLayer eth_layer(dev->getMacAddress(), gateaway_mac);
+    pcpp::IPv4Layer ip_layer(source_ip_, dest_ip_);
+    pcpp::IcmpLayer icmp_layer;
+    icmp_layer.setEchoRequestData(123, 1, 0, nullptr, 0);
+
+    pcpp::Packet packet(100);
+
+    packet.addLayer(&eth_layer);
+    packet.addLayer(&ip_layer);
+    packet.addLayer(&icmp_layer);
+    //packet.getLayerOfType<pcpp::IPv4Layer>()->getIPv4Header()->timeToLive = 123;
+
+    packet.computeCalculateFields();
+
+    dev->sendPacket(*packet.getRawPacket());
+}
+
+void netmap::RouteTracer::OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
+    const pcpp::Packet parsed_packet{rawPacket};
+
+    const auto reply_handler = static_cast<IcmpReplyHandler *>(cookie);
+
+    reply_handler->ProcessIcmpReply(parsed_packet);
+}
 
 void netmap::RouteTracer::Execute() {
-    logger_.VerboseLog(std::format("finding path (traceroute) for destination ip: {}", dest_ip_.getIPv4().toString()));
+    logger_.VerboseLog(std::format("finding path (traceroute) for destination ip: {}", dest_ip_.toString()));
 
-    // TODO
+    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByIp(source_ip_);
+
+    if (dev == nullptr) {
+        throw std::runtime_error{std::format("could not find network interface for destination ip: {}", dest_ip_.toString())};
+    }
+
+    IcmpReplyHandler stats{logger_};
+
+    auto net_utils = pcpp::NetworkUtils::getInstance();
+    double arp_response_time = 1000.0;
+
+    auto gateaway_mac = net_utils.getMacAddress(dev->getDefaultGateway(), dev, arp_response_time, dev->getMacAddress(), source_ip_);
+    logger_.VerboseLog(std::format("resolved gateaway mac to: {}", gateaway_mac.toString()));
+
+
+    dev->open();
+    dev->startCapture(OnIcmpPacketCapture, &stats);
+
+    FindRoute(dev, gateaway_mac);
+
+    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(10000));
+    dev->stopCapture();
+
+    dev->close();
 }

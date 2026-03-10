@@ -1,5 +1,6 @@
 #ifndef NETWORK_MAPPER_TRACEROUTE_PROCESSOR_HPP
 #define NETWORK_MAPPER_TRACEROUTE_PROCESSOR_HPP
+#include <ifaddrs.h>
 #include <IpAddress.h>
 
 #include "RequestProcessor.hpp"
@@ -9,8 +10,12 @@ namespace netmap {
         const UserRequest &user_request_;
         Logger& logger_;
 
-        pcpp::IPAddress ExtractIpAddress(const UserRequest &user_request);
-        pcpp::IPAddress ResolveIp(const std::string &domain_name);
+        pcpp::IPv4Address ExtractDestIpAddress(const UserRequest &user_request);
+        pcpp::IPv4Address DNSResolveIp(const std::string &domain_name);
+
+        static bool IsTargetIfa(const ifaddrs * ifa);
+
+        static pcpp::IPv4Address GetMyIp();
 
     public:
         explicit TracerouteProcessor(const UserRequest &user_request, Logger& logger);

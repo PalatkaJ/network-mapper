@@ -1,4 +1,4 @@
-#include "ReplyHandler.hpp"
+#include "ArpReplyHandler.hpp"
 
 #include <IPv4Layer.h>
 #include <format>
@@ -6,12 +6,12 @@
 #include "ArpLayer.h"
 #include "Packet.h"
 
-netmap::ReplyHandler::ReplyHandler(MacVendorMapper& mac_vendor_mapper, Logger &logger)
+netmap::ArpReplyHandler::ArpReplyHandler(MacVendorMapper& mac_vendor_mapper, Logger &logger)
     :mac_vendor_mapper_(mac_vendor_mapper), logger_(logger) {
     devices_ = {};
 }
 
-void netmap::ReplyHandler::ProcessArpReply(const pcpp::Packet &parsedPacket) {
+void netmap::ArpReplyHandler::ProcessArpReply(const pcpp::Packet &parsedPacket) {
     auto arp_layer = parsedPacket.getLayerOfType<pcpp::ArpLayer>();
     auto sender_mac = arp_layer->getSenderMacAddress();
     auto sender_ip = arp_layer->getSenderIpAddr();

@@ -16,7 +16,7 @@
 
 #include "NetworkAsciPrinter.hpp"
 
-bool netmap::InterfaceScanningProcessor::IsInterestingIfa(const ifaddrs *ifa, const std::string &devName) {
+bool netmap::InterfaceScanningProcessor::IsTargetIfa(const ifaddrs *ifa, const std::string &devName) {
     // AF_INET means IPv4, and it is the interface we were requested (by the name, e.g., eth0)
     return ifa->ifa_netmask && ifa->ifa_netmask->sa_family == AF_INET
         && strcmp(ifa->ifa_name, devName.c_str()) == 0;
@@ -33,7 +33,7 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
 
     // iterate the linked list of interface devices and find the one we want to sniff on
     for (const ifaddrs *ifa = ifap; ifa != nullptr; ifa = ifa->ifa_next) {
-        if (IsInterestingIfa(ifa, dev.getName())) {
+        if (IsTargetIfa(ifa, dev.getName())) {
             char netmask[INET_ADDRSTRLEN];
 
             inet_ntop(AF_INET, &reinterpret_cast<sockaddr_in *>(ifa->ifa_netmask)->sin_addr,
@@ -47,7 +47,7 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
     freeifaddrs(ifap);
 
     // nothing sensible to do
-    throw std::runtime_error("couldn't find netmask for given interface");
+    throw std::runtime_error("could not find netmask for given interface");
 }
 
 netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(const UserRequest &user_request, Logger &logger)
