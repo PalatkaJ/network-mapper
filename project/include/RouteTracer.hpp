@@ -3,6 +3,7 @@
 #include <IpAddress.h>
 #include <PcapLiveDevice.h>
 
+#include "IcmpReplyHandler.hpp"
 #include "Logger.hpp"
 #include "UserRequest.hpp"
 
@@ -19,7 +20,7 @@ namespace netmap {
 
         static void OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
-        void Execute();
+        IcmpReplyHandler Execute();
     };
 }
 

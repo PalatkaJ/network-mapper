@@ -81,5 +81,13 @@ void netmap::TracerouteProcessor::Process() {
     auto my_ip = GetMyIp();
 
     auto route_tracer = RouteTracer{my_ip, dest_ip, logger_};
-    route_tracer.Execute();
+    auto stats = route_tracer.Execute();
+
+    for (auto ip: stats.GetHitIps()) {
+        logger_.VerboseLog(ip.toString());
+    }
+
+    if (stats.IsDestHit()) {
+        logger_.VerboseLog(std::format("Destination reached after {} hops", stats.GetHitIps().size() + 1));
+    }
 }

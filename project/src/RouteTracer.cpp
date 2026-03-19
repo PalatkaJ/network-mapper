@@ -15,7 +15,6 @@ netmap::RouteTracer::RouteTracer(pcpp::IPv4Address source_ip, pcpp::IPv4Address 
     :source_ip_(source_ip), dest_ip_(dest_ip), logger_(logger){}
 
 void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress gateaway_mac) {
-
     pcpp::EthLayer eth_layer(dev->getMacAddress(), gateaway_mac);
     pcpp::IPv4Layer ip_layer(source_ip_, dest_ip_);
     pcpp::IcmpLayer icmp_layer;
@@ -26,11 +25,12 @@ void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress 
     packet.addLayer(&eth_layer);
     packet.addLayer(&ip_layer);
     packet.addLayer(&icmp_layer);
-    //packet.getLayerOfType<pcpp::IPv4Layer>()->getIPv4Header()->timeToLive = 123;
 
-    packet.computeCalculateFields();
-
-    dev->sendPacket(*packet.getRawPacket());
+    for (size_t i = 1; i < 64; ++i) {
+        packet.getLayerOfType<pcpp::IPv4Layer>()->getIPv4Header()->timeToLive = i;
+        packet.computeCalculateFields();
+        dev->sendPacket(*packet.getRawPacket());
+    }
 }
 
 void netmap::RouteTracer::OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
@@ -41,7 +41,7 @@ void netmap::RouteTracer::OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, const 
     reply_handler->ProcessIcmpReply(parsed_packet);
 }
 
-void netmap::RouteTracer::Execute() {
+netmap::IcmpReplyHandler netmap::RouteTracer::Execute() {
     logger_.VerboseLog(std::format("finding path (traceroute) for destination ip: {}", dest_ip_.toString()));
 
     auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByIp(source_ip_);
@@ -64,8 +64,9 @@ void netmap::RouteTracer::Execute() {
 
     FindRoute(dev, gateaway_mac);
 
-    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(10000));
+    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(5000));
     dev->stopCapture();
-
     dev->close();
+
+    return stats;
 }
