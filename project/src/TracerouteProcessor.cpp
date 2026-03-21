@@ -9,6 +9,7 @@
 #include <net/if.h>
 
 #include "RouteTracer.hpp"
+#include "TracerouteResultPrinter.hpp"
 
 pcpp::IPv4Address netmap::TracerouteProcessor::ExtractDestIpAddress(const UserRequest &user_request) {
     pcpp::IPv4Address ip;
@@ -83,11 +84,7 @@ void netmap::TracerouteProcessor::Process() {
     auto route_tracer = RouteTracer{my_ip, dest_ip, logger_};
     auto stats = route_tracer.Execute();
 
-    for (auto ip: stats.GetHitIps()) {
-        logger_.VerboseLog(ip.toString());
-    }
+    auto traceroute_printer = TracerouteResultPrinter{stats.GetHitIps(), stats.IsDestHit(), logger_};
+    traceroute_printer.Print();
 
-    if (stats.IsDestHit()) {
-        logger_.VerboseLog(std::format("Destination reached after {} hops", stats.GetHitIps().size() + 1));
-    }
 }

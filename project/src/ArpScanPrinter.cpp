@@ -1,13 +1,13 @@
-#include "NetworkAsciPrinter.hpp"
+#include "ArpScanPrinter.hpp"
 
 #include <iomanip>
 
 #include "Logger.hpp"
 
-netmap::NetworkAsciPrinter::NetworkAsciPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger)
-    : dev_wrapper_(dev_wrapper), arp_devices_found_(std::move(arp_devices_found)), logger_(logger) {}
+netmap::ArpScanPrinter::ArpScanPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger)
+    : dev_wrapper_(dev_wrapper), arp_devices_found_(std::move(arp_devices_found)), ResultPrinter(logger) {}
 
-void netmap::NetworkAsciPrinter::PrettyPrint() const {
+void netmap::ArpScanPrinter::Print() const {
     // TODO this will need a big refactor, I should be able to write just stream << ArpDeviceInfo, so overload operator, define constants and so on...
     std::stringstream ss;
 

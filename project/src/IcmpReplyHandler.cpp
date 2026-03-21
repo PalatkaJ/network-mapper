@@ -1,8 +1,9 @@
 #include "IcmpReplyHandler.hpp"
+#include <arpa/inet.h>
 
 #include <IcmpLayer.h>
 
-void netmap::IcmpReplyHandler::ProcessIcmpReply(const pcpp::IcmpLayer *icmp_layer) {
+void netmap::IcmpReplyHandler::ProcessIcmpReply(pcpp::IcmpLayer *icmp_layer) {
     switch (icmp_layer->getIcmpHeader()->type) {
         case pcpp::ICMP_ECHO_REQUEST:
             // the outcoming request
@@ -18,12 +19,18 @@ void netmap::IcmpReplyHandler::ProcessIcmpReply(const pcpp::IcmpLayer *icmp_laye
     }
 }
 
-void netmap::IcmpReplyHandler::ProcessEchoReply(const pcpp::IcmpLayer *icmp_layer) {
+void netmap::IcmpReplyHandler::ProcessEchoReply(pcpp::IcmpLayer *icmp_layer) {
+    auto request_id = icmp_layer->getEchoReplyData()->header->id;
+    request_id = ntohs(request_id);
+    hit_ips_[request_id] = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getPrevLayer())->getSrcIPv4Address();
     dest_hit_ = true;
 }
 
 void netmap::IcmpReplyHandler::ProcessTimeExceeded(const pcpp::IcmpLayer *icmp_layer) {
-    hit_ips_.emplace_back(dynamic_cast<pcpp::IPv4Layer*>(icmp_layer->getPrevLayer())->getSrcIPv4Address());
+    auto request_id = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getNextLayer())->getIPv4Header()->ipId;
+    // packety jsou jak matriosky, takhle dostanu ten svuj puvodni request, ale jen ip vrstvu
+
+    hit_ips_[request_id] = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getPrevLayer())->getSrcIPv4Address();
 }
 
 netmap::IcmpReplyHandler::IcmpReplyHandler(Logger &logger)
@@ -32,7 +39,8 @@ netmap::IcmpReplyHandler::IcmpReplyHandler(Logger &logger)
 void netmap::IcmpReplyHandler::ProcessIcmpReply(const pcpp::Packet &parsedPacket) {
     auto icmp_layer = parsedPacket.getLayerOfType<pcpp::IcmpLayer>();
 
-    if (icmp_layer != nullptr) {
+    if (icmp_layer != nullptr && !dest_hit_) {
         ProcessIcmpReply(icmp_layer);
     }
 }
+

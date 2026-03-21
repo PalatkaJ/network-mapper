@@ -18,7 +18,6 @@ void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress 
     pcpp::EthLayer eth_layer(dev->getMacAddress(), gateaway_mac);
     pcpp::IPv4Layer ip_layer(source_ip_, dest_ip_);
     pcpp::IcmpLayer icmp_layer;
-    icmp_layer.setEchoRequestData(123, 1, 0, nullptr, 0);
 
     pcpp::Packet packet(100);
 
@@ -26,8 +25,10 @@ void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress 
     packet.addLayer(&ip_layer);
     packet.addLayer(&icmp_layer);
 
-    for (size_t i = 1; i < 64; ++i) {
+    for (size_t i = 1; i < MAX_HOPS; ++i) {
         packet.getLayerOfType<pcpp::IPv4Layer>()->getIPv4Header()->timeToLive = i;
+        packet.getLayerOfType<pcpp::IPv4Layer>()->getIPv4Header()->ipId = i-1;
+        packet.getLayerOfType<pcpp::IcmpLayer>()->setEchoRequestData(i-1, 0,0,nullptr,0);
         packet.computeCalculateFields();
         dev->sendPacket(*packet.getRawPacket());
     }

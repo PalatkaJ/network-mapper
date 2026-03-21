@@ -37,6 +37,8 @@ void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::
 
     try {
         request_processor->Process();
+        // auto result_printer = request_processor->GetResultPrinter();
+        // result_printer.Print();
     } catch (const std::exception &e) {
         auto processor = netmap::InvalidRequestProcessor{*logger_};
         processor.Process();

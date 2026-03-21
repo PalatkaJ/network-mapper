@@ -1,8 +1,6 @@
 #ifndef NETWORK_MAPPER_VENDORS_CSV_SCHEMA_HPP
 #define NETWORK_MAPPER_VENDORS_CSV_SCHEMA_HPP
 
-#include <cstddef>
-
 constexpr char CSV_HEX_SEPARATOR = ':';
 constexpr char CSV_SEPARATOR = ',';
 constexpr size_t MAC_PREFIX_INDEX = 0;

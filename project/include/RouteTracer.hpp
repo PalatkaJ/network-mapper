@@ -5,7 +5,7 @@
 
 #include "IcmpReplyHandler.hpp"
 #include "Logger.hpp"
-#include "UserRequest.hpp"
+#include "NetworkConstants.hpp"
 
 namespace netmap {
     class RouteTracer {

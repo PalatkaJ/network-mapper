@@ -3,28 +3,31 @@
 #include <IcmpLayer.h>
 #include <IpAddress.h>
 #include <Packet.h>
+#include <array>
 
 #include "Logger.hpp"
+#include "NetworkConstants.hpp"
 
 namespace netmap {
     class IcmpReplyHandler {
         Logger& logger_;
-        std::vector<pcpp::IPv4Address> hit_ips_;
+        std::array<pcpp::IPv4Address, MAX_HOPS> hit_ips_;
         bool dest_hit_ = false;
 
-        void ProcessIcmpReply(const pcpp::IcmpLayer *icmp_layer);
-        void ProcessEchoReply(const pcpp::IcmpLayer *icmp_layer);
+        void ProcessIcmpReply(pcpp::IcmpLayer *icmp_layer);
+        void ProcessEchoReply(pcpp::IcmpLayer *icmp_layer);
+
         void ProcessTimeExceeded(const pcpp::IcmpLayer *icmp_layer);
 
     public:
         explicit IcmpReplyHandler(Logger& logger);
         void ProcessIcmpReply(const pcpp::Packet& parsedPacket);
 
-        [[nodiscard]] const std::vector<pcpp::IPv4Address>& GetHitIps() const;
+        [[nodiscard]] const std::array<pcpp::IPv4Address, MAX_HOPS>& GetHitIps() const;
         [[nodiscard]] bool IsDestHit() const;
     };
 
-    inline const std::vector<pcpp::IPv4Address>& IcmpReplyHandler::GetHitIps() const {
+    inline const std::array<pcpp::IPv4Address, MAX_HOPS>& IcmpReplyHandler::GetHitIps() const {
         return hit_ips_;
     }
 

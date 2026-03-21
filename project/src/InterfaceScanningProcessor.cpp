@@ -14,7 +14,7 @@
 #include <ifaddrs.h>
 #include <format>
 
-#include "NetworkAsciPrinter.hpp"
+#include "ArpScanPrinter.hpp"
 
 bool netmap::InterfaceScanningProcessor::IsTargetIfa(const ifaddrs *ifa, const std::string &devName) {
     // AF_INET means IPv4, and it is the interface we were requested (by the name, e.g., eth0)
@@ -74,6 +74,6 @@ void netmap::InterfaceScanningProcessor::Process() {
     auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, user_request_};
     auto scanned_devices = arp_scanner.ScanNetwork();
 
-    auto network_printer = NetworkAsciPrinter{wrappedDev, scanned_devices, logger_};
-    network_printer.PrettyPrint();
+    auto network_printer = ArpScanPrinter{wrappedDev, scanned_devices, logger_};
+    network_printer.Print();
 }

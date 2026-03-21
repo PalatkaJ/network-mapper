@@ -3,16 +3,16 @@
 #include "ArpDeviceInfo.hpp"
 #include "Logger.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
+#include "ResultPrinter.hpp"
 
 namespace netmap {
-    class NetworkAsciPrinter {
+    class ArpScanPrinter: ResultPrinter {
         PcapLiveDeviceWrapper dev_wrapper_;
         std::vector<ArpDeviceInfo> arp_devices_found_;
-        Logger& logger_;
 
     public:
-        NetworkAsciPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger);
-        void PrettyPrint() const;
+        ArpScanPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger);
+        void Print() const override;
     };
 }
 

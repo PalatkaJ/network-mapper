@@ -2,6 +2,7 @@
 #define OPTION_HANDLER_HPP
 #include "cxxopts.hpp"
 #include "Logger.hpp"
+#include "ResultPrinter.hpp"
 
 
 namespace netmap {
