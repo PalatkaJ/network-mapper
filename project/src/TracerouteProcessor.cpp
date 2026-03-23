@@ -86,5 +86,4 @@ void netmap::TracerouteProcessor::Process() {
 
     auto traceroute_printer = TracerouteResultPrinter{stats.GetHitIps(), stats.IsDestHit(), logger_};
     traceroute_printer.Print();
-
 }

@@ -12,6 +12,11 @@ namespace netmap {
 
     public:
         ArpScanPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger);
+
+        void PrintHeader(std::stringstream& ss, size_t width, char main_sep, char sub_sep) const;
+
+        void PrintBody(std::stringstream& ss, size_t width, char sub_sep) const;
+
         void Print() const override;
     };
 }
