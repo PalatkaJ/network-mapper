@@ -6,7 +6,7 @@
 #include "RequestProcessor.hpp"
 
 namespace netmap {
-    class TracerouteProcessor: public RequestProcessor {
+    class TracerouteProcessor final: public RequestProcessor {
         const UserRequest &user_request_;
         Logger& logger_;
 

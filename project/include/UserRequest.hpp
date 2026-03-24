@@ -1,13 +1,12 @@
 #ifndef SCAN_REQUEST_HPP
 #define SCAN_REQUEST_HPP
-#include <cstdint>
 #include <string>
-
+#include "cxxopts.hpp"
 
 namespace netmap {
     struct UserRequest {
         std::string interface_name;
-        std::string traceroute_destination; // either concrete IP or domain name which will get resolved to IP
+        std::string traceroute_destination; // either concrete IP or domain name, which will get resolved to IP
         std::string output_filename;
         uint32_t timeout_ms = 5000;
         /*
@@ -16,6 +15,7 @@ namespace netmap {
         bool verbose = false;
         bool help = false;
 
+        void Validate(const cxxopts::ParseResult &result);
         [[nodiscard]] bool isValid() const;
     };
 }

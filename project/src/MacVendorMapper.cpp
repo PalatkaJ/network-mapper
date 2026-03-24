@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "Logger.hpp"
-#include "VendorsCsvSchema.hpp"
 
 netmap::MacVendorMapper::MacVendorMapper(std::string&& csv_filename, Logger& logger)
     : csv_filename_(std::move(csv_filename)), logger_(logger) {}

@@ -13,9 +13,7 @@ class ApplicationController {
     [[nodiscard]] static bool ValidateUserRequest(const netmap::UserRequest &request);
 
 public:
-    [[nodiscard]] std::unique_ptr<netmap::RequestProcessor> GetRequestedProcessor(const netmap::UserRequest &user_request, const cxxopts::Options &options) const;
-
-    void Run(const cxxopts::Options &options, const cxxopts::ParseResult &result);
+    void Run(const cxxopts::Options &options, const cxxopts::ParseResult &result) const;
 };
 
 #endif //APPLICATION_CONTROLLER_HPP

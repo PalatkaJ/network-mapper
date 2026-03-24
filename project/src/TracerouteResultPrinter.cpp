@@ -2,18 +2,15 @@
 #include <iomanip>
 #include <sstream>
 
-netmap::TracerouteResultPrinter::TracerouteResultPrinter(const std::array<pcpp::IPv4Address, MAX_HOPS>& hops, bool dest_hit, Logger &logger)
-    : hops_(hops), dest_hit_(dest_hit), ResultPrinter(logger) {}
+netmap::TracerouteResultPrinter::TracerouteResultPrinter(const std::array<pcpp::IPv4Address, MAX_HOPS>& hops, bool dest_hit, Logger &logger, PrinterConfig printer_config)
+    :  ResultPrinter(logger, std::move(printer_config)), hops_(hops), dest_hit_(dest_hit) {}
 
-void netmap::TracerouteResultPrinter::PrintHeader(std::stringstream& ss, size_t width, const char main_sep, const char sub_sep) const {
-    ss << " TRACEROUTE REPORT" << std::endl;
-    ss << std::string(width, main_sep) << std::endl;
+void netmap::TracerouteResultPrinter::PrintHeader(std::stringstream& ss) const {
     ss << " Status: " << (dest_hit_ ? "Destination Reached" : "Destination Unreachable / Timeout") << std::endl;
     ss << " Max Hops: " << MAX_HOPS << std::endl;
-    ss << std::string(width, sub_sep) << std::endl;
 }
 
-void netmap::TracerouteResultPrinter::PrintBody(std::stringstream& ss, const size_t width, const char sub_sep) const {
+void netmap::TracerouteResultPrinter::PrintBody(std::stringstream& ss) const {
     int lastValidIndex = -1;
     for (int i = static_cast<int>(hops_.size()) - 1; i >= 0; --i) {
         if (hops_[i] != pcpp::IPv4Address::Zero) {
@@ -32,7 +29,7 @@ void netmap::TracerouteResultPrinter::PrintBody(std::stringstream& ss, const siz
     ss << std::left
        << std::setw(hop_width) << " Hop"
        << " IP Address" << std::endl;
-    ss << std::string(width, sub_sep) << std::endl;
+    ss << std::string(printer_config_.width, printer_config_.sub_sep) << std::endl;
 
     // we are sure the index is non-negative valid
     lastValidIndex = static_cast<size_t>(lastValidIndex);
@@ -45,18 +42,4 @@ void netmap::TracerouteResultPrinter::PrintBody(std::stringstream& ss, const siz
             ss << hops_[i].toString() << std::endl;
         }
     }
-}
-
-void netmap::TracerouteResultPrinter::Print() const {
-    std::stringstream ss;
-    const size_t width = 60;
-    const char main_sep = '=';
-    const char sub_sep = '-';
-
-    PrintHeader(ss, width, main_sep, sub_sep);
-    PrintBody(ss, width, sub_sep);
-
-    ss << std::string(width, main_sep) << std::endl;
-
-    logger_.Log(ss.str());
 }

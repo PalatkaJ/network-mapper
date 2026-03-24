@@ -6,7 +6,7 @@
 #include "RequestProcessor.hpp"
 
 namespace netmap {
-    class InvalidRequestProcessor: public RequestProcessor {
+    class InvalidRequestProcessor final: public RequestProcessor {
         Logger& logger_;
     public:
         explicit InvalidRequestProcessor(Logger& logger);

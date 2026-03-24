@@ -8,6 +8,11 @@
 namespace netmap {
 
     constexpr uint8_t LOCALLY_ADMINISTERED_MASK = 0x02;
+    constexpr char CSV_HEX_SEPARATOR = ':';
+    constexpr char CSV_SEPARATOR = ',';
+    constexpr size_t MAC_PREFIX_INDEX = 0;
+    constexpr size_t VENDOR_NAME_INDEX = 1;
+    constexpr size_t CSV_COLUMNS_COUNT = 5;
 
     class MacVendorMapper {
         std::string csv_filename_;
