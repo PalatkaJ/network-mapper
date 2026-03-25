@@ -1,6 +1,6 @@
 #include "ApplicationController.hpp"
 #include "cxxopts.hpp"
-#include "InterfaceScanningProcessor.hpp"
+#include "ArpScanProcessor.hpp"
 #include "InvalidRequestProcessor.hpp"
 #include "LoggerFactory.hpp"
 #include "UserRequest.hpp"
@@ -8,7 +8,7 @@
 
 void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::ParseResult &result) const {
     netmap::UserRequest user_request;
-    user_request.Validate(result);
+    user_request.Initialize(result);
 
     const auto logger = netmap::LoggerFactory::CreateLogger(user_request);
 

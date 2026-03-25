@@ -11,12 +11,13 @@ namespace netmap {
     private:
         const std::array<pcpp::IPv4Address, MAX_HOPS>& hops_;
         bool dest_hit_;
+        pcpp::IPv4Address dest_ip_;
     protected:
         [[nodiscard]] inline std::string GetTitle() const override;
         void PrintHeader(std::stringstream& ss) const override;
         void PrintBody(std::stringstream& ss) const override;
     public:
-        TracerouteResultPrinter(const std::array<pcpp::IPv4Address, MAX_HOPS>& hops, bool dest_hit, Logger& logger, PrinterConfig printer_config = PrinterConfig());
+        TracerouteResultPrinter(const std::array<pcpp::IPv4Address, MAX_HOPS>& hops, bool dest_hit, pcpp::IPv4Address dest_ip, Logger& logger, PrinterConfig printer_config = PrinterConfig());
     };
 
     inline std::string TracerouteResultPrinter::GetTitle() const {

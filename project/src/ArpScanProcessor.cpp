@@ -1,4 +1,4 @@
-#include "InterfaceScanningProcessor.hpp"
+#include "ArpScanProcessor.hpp"
 #include "PcapLiveDeviceWrapper.hpp"
 #include "ArpScanner.hpp"
 #include "Logger.hpp"
@@ -16,13 +16,13 @@
 
 #include "ArpScanPrinter.hpp"
 
-bool netmap::InterfaceScanningProcessor::IsTargetIfa(const ifaddrs *ifa, const std::string &devName) {
+bool netmap::ArpScanProcessor::IsTargetIfa(const ifaddrs *ifa, const std::string &devName) {
     // AF_INET means IPv4, and it is the interface we were requested (by the name, e.g., eth0)
     return ifa->ifa_netmask && ifa->ifa_netmask->sa_family == AF_INET
         && strcmp(ifa->ifa_name, devName.c_str()) == 0;
 }
 
-pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcpp::PcapLiveDevice &dev) {
+pcpp::IPv4Address netmap::ArpScanProcessor::GetDeviceNetmask(const pcpp::PcapLiveDevice &dev) {
     ifaddrs *ifap = nullptr;
 
     // this generates a linked list of interface devices
@@ -50,10 +50,10 @@ pcpp::IPv4Address netmap::InterfaceScanningProcessor::GetDeviceNetmask(const pcp
     throw std::runtime_error("could not find netmask for given interface");
 }
 
-netmap::InterfaceScanningProcessor::InterfaceScanningProcessor(const UserRequest &user_request, Logger &logger)
+netmap::ArpScanProcessor::ArpScanProcessor(const UserRequest &user_request, Logger &logger)
     :user_request_(user_request), logger_(logger) {}
 
-void netmap::InterfaceScanningProcessor::Process() {
+void netmap::ArpScanProcessor::Process() {
     logger_.VerboseLog(std::format("Trying to find interface {}", user_request_.interface_name));
 
     auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(user_request_.interface_name);
