@@ -11,11 +11,11 @@
 
 #include "IcmpReplyHandler.hpp"
 
-netmap::RouteTracer::RouteTracer(pcpp::IPv4Address source_ip, pcpp::IPv4Address dest_ip, Logger &logger)
-    :source_ip_(source_ip), dest_ip_(dest_ip), logger_(logger){}
+netmap::RouteTracer::RouteTracer(pcpp::IPv4Address source_ip, pcpp::IPv4Address dest_ip, Logger &logger, const UserRequest &user_request)
+    :source_ip_(source_ip), dest_ip_(dest_ip), logger_(logger), user_request_(user_request) {}
 
-void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress gateaway_mac) {
-    pcpp::EthLayer eth_layer(dev->getMacAddress(), gateaway_mac);
+void netmap::RouteTracer::FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress gateway_mac) {
+    pcpp::EthLayer eth_layer(dev->getMacAddress(), gateway_mac);
     pcpp::IPv4Layer ip_layer(source_ip_, dest_ip_);
     pcpp::IcmpLayer icmp_layer;
 
@@ -65,7 +65,7 @@ netmap::IcmpReplyHandler netmap::RouteTracer::Execute() {
 
     FindRoute(dev, gateaway_mac);
 
-    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(5000));
+    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(user_request_.timeout_ms));
     dev->stopCapture();
     dev->close();
 

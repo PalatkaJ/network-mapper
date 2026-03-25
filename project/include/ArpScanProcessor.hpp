@@ -8,7 +8,7 @@
 #include "PcapLiveDeviceWrapper.hpp"
 
 namespace netmap {
-    class InterfaceScanningProcessor final : public RequestProcessor {
+    class ArpScanProcessor final : public RequestProcessor {
         const UserRequest &user_request_;
         Logger& logger_;
 
@@ -16,7 +16,7 @@ namespace netmap {
         static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
 
     public:
-        explicit InterfaceScanningProcessor(const UserRequest &user_request, Logger& logger);
+        explicit ArpScanProcessor(const UserRequest &user_request, Logger& logger);
 
         void Process() override;
     };

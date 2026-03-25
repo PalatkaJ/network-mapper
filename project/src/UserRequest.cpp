@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void netmap::UserRequest::Validate(const cxxopts::ParseResult &result) {
+void netmap::UserRequest::Initialize(const cxxopts::ParseResult &result) {
     if (result.count("help") != 0) {
         help = true;
     }
@@ -23,8 +23,8 @@ void netmap::UserRequest::Validate(const cxxopts::ParseResult &result) {
         timeout_ms = result["timeout"].as<uint32_t>();
     }
 
-    if (result.count("traceroute") != 0) {
-        traceroute_destination = result["traceroute"].as<std::string>();
+    if (result.count("destination") != 0) {
+        traceroute_destination = result["destination"].as<std::string>();
     }
 }
 

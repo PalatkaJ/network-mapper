@@ -13,9 +13,10 @@ int main(int argc, char *argv[]) {
             ("h,help", "Print usage")
             ("v,verbose", "Print verbose messages")
             ("o,output", "Specify output file", cxxopts::value<std::string>())
-            ("timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
+            ("t, timeout", "Specify for how long should the scanner scan provided interface (milliseconds)",
                 cxxopts::value<uint32_t>())
-            ("traceroute", "Trace the route to the provided IP address or domain name.", cxxopts::value<std::string>());
+            ("d, destination", "Trace the route to the provided destination (IP address or domain name).",
+                cxxopts::value<std::string>());
 
     try {
         const cxxopts::ParseResult result = options.parse(argc, argv);

@@ -1,6 +1,6 @@
 #include "RequestProcessorFactory.hpp"
 
-#include "InterfaceScanningProcessor.hpp"
+#include "ArpScanProcessor.hpp"
 #include "TracerouteProcessor.hpp"
 #include "InvalidRequestProcessor.hpp"
 
@@ -15,7 +15,7 @@ netmap::RequestProcessorFactory::CreateRequestProcessor(const UserRequest &user_
     }
 
     if (!std::empty(user_request.interface_name)) {
-        return std::make_unique<InterfaceScanningProcessor>(user_request, logger);
+        return std::make_unique<ArpScanProcessor>(user_request, logger);
     }
 
     return std::make_unique<TracerouteProcessor>(user_request, logger);

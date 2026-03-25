@@ -81,9 +81,9 @@ void netmap::TracerouteProcessor::Process() {
     auto dest_ip = ExtractDestIpAddress(user_request_);
     auto my_ip = GetMyIp();
 
-    auto route_tracer = RouteTracer{my_ip, dest_ip, logger_};
+    auto route_tracer = RouteTracer{my_ip, dest_ip, logger_, user_request_};
     auto stats = route_tracer.Execute();
 
-    auto traceroute_printer = TracerouteResultPrinter{stats.GetHitIps(), stats.IsDestHit(), logger_};
+    auto traceroute_printer = TracerouteResultPrinter{stats.GetHitIps(), stats.IsDestHit(), dest_ip, logger_};
     traceroute_printer.Print();
 }

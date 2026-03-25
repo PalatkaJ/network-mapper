@@ -15,7 +15,7 @@ namespace netmap {
         bool verbose = false;
         bool help = false;
 
-        void Validate(const cxxopts::ParseResult &result);
+        void Initialize(const cxxopts::ParseResult &result);
         [[nodiscard]] bool isValid() const;
     };
 }
