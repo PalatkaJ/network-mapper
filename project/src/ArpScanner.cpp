@@ -11,14 +11,17 @@
 #include "MacVendorMapper.hpp"
 
 pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
+    // overloaded operator &
     auto starting_ip = dev_wrapper_.device->getIPv4Address() & dev_wrapper_.netmask;
 
-    IncrementIpAddress(starting_ip); // increment because x.y.z.0 is reserved for the network itself (not a valid host ip)
+    // increment because x.y.z.0 is reserved for the network itself (not a valid host ip)
+    IncrementIpAddress(starting_ip);
+
     return starting_ip;
 }
 
 // maybe define operator for this
-void netmap::ArpScanner::IncrementIpAddress(pcpp::IPv4Address& ip) {
+void netmap::ArpScanner::IncrementIpAddress(pcpp::IPv4Address &ip) {
     // net to host and increment
     uint32_t ip_h = GetHostIntFromNetIp(ip) + 1;
 
@@ -63,15 +66,18 @@ void netmap::ArpScanner::SendArpRequests() const {
     }
 }
 
-netmap::ArpScanner::ArpScanner(DevWrapperForArpScan &dev_wrapper, MacVendorMapper& mac_vendor_mapper, Logger& logger,const UserRequest &user_request)
-    : dev_wrapper_(dev_wrapper), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), user_request_(user_request) {}
+netmap::ArpScanner::ArpScanner(DevWrapperForArpScan &dev_wrapper, MacVendorMapper &mac_vendor_mapper, Logger &logger,
+                               const UserRequest &user_request)
+    : dev_wrapper_(dev_wrapper), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), user_request_(user_request) {
+}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
     pcpp::ArpFilter arp_filter{pcpp::ARP_REPLY};
     dev_wrapper_.device->setFilter(arp_filter);
 }
 
-void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
+void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface,
+                                           void *cookie) {
     const pcpp::Packet parsed_packet{rawPacket};
 
     const auto reply_handler = static_cast<ArpReplyHandler *>(cookie);

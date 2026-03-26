@@ -4,20 +4,41 @@
 #include <IpAddress.h>
 
 #include "RequestProcessor.hpp"
+#include "UserRequest.hpp"
 
 namespace netmap {
-    class TracerouteProcessor final: public RequestProcessor {
+    /**
+     * @brief A request processor for executing a traceroute operation.
+     *
+     * This class implements the RequestProcessor interface and encapsulates the
+     * high-level logic for performing a traceroute, from resolving the destination
+     * domain name to running the trace and printing the results.
+     */
+    class TracerouteProcessor final : public RequestProcessor {
         const UserRequest &user_request_;
 
         pcpp::IPv4Address ExtractDestIpAddress(const UserRequest &user_request);
+
         pcpp::IPv4Address DNSResolveIp(const std::string &domain_name);
 
-        static bool IsTargetIfa(const ifaddrs * ifa);
+        static bool IsTargetIfa(const ifaddrs *ifa);
 
         static pcpp::IPv4Address GetMyIp();
 
     public:
-        explicit TracerouteProcessor(const UserRequest &user_request, Logger& logger);
+        /**
+         * @brief Constructs a TracerouteProcessor.
+         * @param user_request The user's configuration for the traceroute.
+         * @param logger A logger instance for logging messages.
+         */
+        explicit TracerouteProcessor(const UserRequest &user_request, Logger &logger);
+
+        /**
+         * @brief Executes the traceroute process.
+         *
+         * This method handles DNS resolution, device lookup, executing the
+         * traceroute logic, and printing the final results.
+         */
         void Process() override;
     };
 }

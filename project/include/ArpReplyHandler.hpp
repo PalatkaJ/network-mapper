@@ -7,18 +7,43 @@
 #include "MacVendorMapper.hpp"
 
 namespace netmap {
+    /**
+     * @brief Processes ARP reply packets to identify and store device information.
+     *
+     * This class is designed to be used within a packet capture callback. It parses
+     * ARP reply packets, extracts device details (IP, MAC), looks up the vendor,
+     * and accumulates a list of discovered devices.
+     */
     class ArpReplyHandler {
         std::vector<ArpDeviceInfo> devices_;
-        MacVendorMapper& mac_vendor_mapper_;
-        Logger& logger_;
+        MacVendorMapper &mac_vendor_mapper_;
+        Logger &logger_;
+
     public:
-        explicit ArpReplyHandler(MacVendorMapper& mac_vendor_mapper, Logger& logger);
-        void ProcessArpReply(const pcpp::Packet& parsedPacket);
-        std::vector<ArpDeviceInfo> GetArpDevices();
+        /**
+         * @brief Constructs an ArpReplyHandler.
+         * @param mac_vendor_mapper A mapper to resolve MAC addresses to vendor names.
+         * @param logger A logger for logging messages.
+         */
+        explicit ArpReplyHandler(MacVendorMapper &mac_vendor_mapper, Logger &logger);
+
+        /**
+         * @brief Processes a single ARP reply packet.
+         * @param parsedPacket The packet to be processed.
+         */
+        void ProcessArpReply(const pcpp::Packet &parsedPacket);
+
+        /**
+         * @brief Retrieves the list of discovered devices.
+         *
+         * This method moves the internal list of devices to the caller.
+         * @return A vector of ArpDeviceInfo objects.
+         */
+        const std::vector<ArpDeviceInfo>& GetArpDevices();
     };
 
-    inline std::vector<ArpDeviceInfo> ArpReplyHandler::GetArpDevices() {
-        return std::move(devices_);
+    inline const std::vector<ArpDeviceInfo>& ArpReplyHandler::GetArpDevices() {
+        return devices_;
     }
 }
 

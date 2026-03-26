@@ -19,7 +19,7 @@ pcpp::IPv4Address netmap::TracerouteProcessor::ExtractDestIpAddress(const UserRe
 
     try {
         ip = pcpp::IPv4Address{user_request.traceroute_destination};
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::invalid_argument &e) {
         ip = DNSResolveIp(user_request.traceroute_destination);
     }
 
@@ -36,10 +36,10 @@ pcpp::IPv4Address netmap::TracerouteProcessor::DNSResolveIp(const std::string &d
     int status = getaddrinfo(domain_name.c_str(), nullptr, &hints, &res);
     if (status != 0) {
         throw std::invalid_argument(std::format("DNS resolution failed for {}: {}",
-                                    domain_name, gai_strerror(status)));
+                                                domain_name, gai_strerror(status)));
     }
 
-    auto* ipv4_addr = reinterpret_cast<sockaddr_in*>(res->ai_addr);
+    auto *ipv4_addr = reinterpret_cast<sockaddr_in *>(res->ai_addr);
 
     pcpp::IPv4Address res_ip(ipv4_addr->sin_addr.s_addr);
 
@@ -64,7 +64,7 @@ pcpp::IPv4Address netmap::TracerouteProcessor::GetMyIp() {
             char my_ip[INET_ADDRSTRLEN];
 
             inet_ntop(AF_INET, &reinterpret_cast<sockaddr_in *>(ifa->ifa_addr)->sin_addr,
-                    my_ip, INET_ADDRSTRLEN);
+                      my_ip, INET_ADDRSTRLEN);
 
             freeifaddrs(ifap);
             return {my_ip};
@@ -77,7 +77,8 @@ pcpp::IPv4Address netmap::TracerouteProcessor::GetMyIp() {
 }
 
 netmap::TracerouteProcessor::TracerouteProcessor(const UserRequest &user_request, Logger &logger)
-    : RequestProcessor(logger), user_request_(user_request) {}
+    : RequestProcessor(logger), user_request_(user_request) {
+}
 
 
 void netmap::TracerouteProcessor::Process() {
@@ -98,7 +99,8 @@ void netmap::TracerouteProcessor::Process() {
     auto net_utils = pcpp::NetworkUtils::getInstance();
     double arp_response_time = 1000.0;
 
-    auto gateway_mac = net_utils.getMacAddress(dev->getDefaultGateway(), dev, arp_response_time, dev->getMacAddress(), my_ip);
+    auto gateway_mac = net_utils.getMacAddress(dev->getDefaultGateway(), dev, arp_response_time, dev->getMacAddress(),
+                                               my_ip);
     logger_.VerboseLog(std::format("Resolved gateway mac to: {}", gateway_mac.toString()));
     auto dev_wrapper = DevWrapperForTraceroute{dev, gateway_mac};
 

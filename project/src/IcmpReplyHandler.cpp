@@ -22,9 +22,7 @@ void netmap::IcmpReplyHandler::ProcessIcmpReply(pcpp::IcmpLayer *icmp_layer) {
 void netmap::IcmpReplyHandler::ProcessEchoReply(pcpp::IcmpLayer *icmp_layer) {
     auto request_id = icmp_layer->getEchoReplyData()->header->id;
     request_id = ntohs(request_id);
-    hit_ips_[request_id] = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getPrevLayer())->getSrcIPv4Address();
-
-    {
+    hit_ips_[request_id] = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getPrevLayer())->getSrcIPv4Address(); {
         std::lock_guard lock(mutex_);
         dest_hit_ = true;
     }
@@ -40,7 +38,8 @@ void netmap::IcmpReplyHandler::ProcessTimeExceeded(const pcpp::IcmpLayer *icmp_l
 }
 
 netmap::IcmpReplyHandler::IcmpReplyHandler(Logger &logger)
-    :logger_(logger) {}
+    : logger_(logger) {
+}
 
 void netmap::IcmpReplyHandler::ProcessIcmpReply(const pcpp::Packet &parsedPacket) {
     auto icmp_layer = parsedPacket.getLayerOfType<pcpp::IcmpLayer>();
@@ -49,4 +48,3 @@ void netmap::IcmpReplyHandler::ProcessIcmpReply(const pcpp::Packet &parsedPacket
         ProcessIcmpReply(icmp_layer);
     }
 }
-

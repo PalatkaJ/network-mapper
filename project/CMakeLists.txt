@@ -22,7 +22,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
         PcapPlusPlus::Pcap++
-	cxxopts::cxxopts
+        cxxopts::cxxopts
 )
 
 # Set runtime output directory

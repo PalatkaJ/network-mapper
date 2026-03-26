@@ -10,32 +10,66 @@
 #include "NetworkConstants.hpp"
 
 namespace netmap {
+    /**
+     * @brief Processes ICMP reply packets, primarily for traceroute functionality.
+     *
+     * This class inspects incoming ICMP packets (like Time Exceeded and Echo Reply)
+     * to build a traceroute path. It also manages threading constructs (mutex and
+     * condition variable) to signal when the trace is complete.
+     */
     class IcmpReplyHandler {
-        Logger& logger_;
+        Logger &logger_;
         std::array<pcpp::IPv4Address, MAX_HOPS> hit_ips_;
 
+        std::mutex mutex_;
+        std::condition_variable cv_;
         bool dest_hit_ = false;
 
         void ProcessIcmpReply(pcpp::IcmpLayer *icmp_layer);
+
         void ProcessEchoReply(pcpp::IcmpLayer *icmp_layer);
 
         void ProcessTimeExceeded(const pcpp::IcmpLayer *icmp_layer);
 
     public:
+        /**
+         * @brief Constructs an IcmpReplyHandler.
+         * @param logger A logger instance for logging messages.
+         */
+        explicit IcmpReplyHandler(Logger &logger);
 
-        std::mutex mutex_;
-        std::condition_variable cv_;
+        /**
+         * @brief Processes a single ICMP reply packet.
+         * @param parsedPacket The packet to process.
+         */
+        void ProcessIcmpReply(const pcpp::Packet &parsedPacket);
 
-        explicit IcmpReplyHandler(Logger& logger);
-        void ProcessIcmpReply(const pcpp::Packet& parsedPacket);
+        /**
+         * @brief Gets the array of IP addresses discovered at each hop.
+         * @return A constant reference to the array of hop IP addresses.
+         */
+        [[nodiscard]] std::array<pcpp::IPv4Address, MAX_HOPS> GetHitIps() const;
 
-        [[nodiscard]] const std::array<pcpp::IPv4Address, MAX_HOPS>& GetHitIps() const;
+        /**
+         * @brief Checks if the final destination has been reached.
+         * @return True if the destination has been reached, false otherwise.
+         */
         [[nodiscard]] bool IsDestHit() const;
-        [[nodiscard]] std::condition_variable& GetCondVar();
-        [[nodiscard]] std::mutex& GetMutex();
+
+        /**
+         * @brief Gets a reference to the condition variable for synchronization.
+         * @return A reference to the std::condition_variable.
+         */
+        [[nodiscard]] std::condition_variable &GetCondVar();
+
+        /**
+         * @brief Gets a reference to the mutex for synchronization.
+         * @return A reference to the std::mutex.
+         */
+        [[nodiscard]] std::mutex &GetMutex();
     };
 
-    inline const std::array<pcpp::IPv4Address, MAX_HOPS>& IcmpReplyHandler::GetHitIps() const {
+    inline std::array<pcpp::IPv4Address, MAX_HOPS> IcmpReplyHandler::GetHitIps() const {
         return hit_ips_;
     }
 
@@ -43,14 +77,13 @@ namespace netmap {
         return dest_hit_;
     }
 
-    inline std::mutex& IcmpReplyHandler::GetMutex() {
+    inline std::mutex &IcmpReplyHandler::GetMutex() {
         return mutex_;
     }
 
-    inline std::condition_variable& IcmpReplyHandler::GetCondVar() {
+    inline std::condition_variable &IcmpReplyHandler::GetCondVar() {
         return cv_;
     }
-
 }
 
 #endif //ICMP_REPLY_HANDLER_HPP

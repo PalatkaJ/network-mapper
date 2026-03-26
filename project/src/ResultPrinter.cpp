@@ -1,9 +1,11 @@
 #include "ResultPrinter.hpp"
 
 #include <iostream>
+#include <sstream>
 
-netmap::ResultPrinter::ResultPrinter(Logger &logger, PrinterConfig&& printer_config)
-    : logger_(logger), printer_config_(std::move(printer_config)) {}
+netmap::ResultPrinter::ResultPrinter(Logger &logger, PrinterConfig printer_config)
+    : logger_(logger), printer_config_(printer_config) {
+}
 
 void netmap::ResultPrinter::Print() const {
     std::stringstream ss;

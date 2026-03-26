@@ -2,21 +2,39 @@
 #define ARP_SCAN_PROCESSOR_HPP
 #include <ifaddrs.h>
 #include <PcapLiveDevice.h>
-
 #include "RequestProcessor.hpp"
 #include "UserRequest.hpp"
-#include "DevWrapperForArpScan.hpp"
+
 
 namespace netmap {
+    /**
+     * @brief A request processor for executing an ARP scan.
+     *
+     * This class implements the RequestProcessor interface and encapsulates the
+     * high-level logic for setting up and running a network scan for active
+     * devices using ARP.
+     */
     class ArpScanProcessor final : public RequestProcessor {
         const UserRequest &user_request_;
 
-        static bool IsTargetIfa(const ifaddrs *ifa, const std::string& devName);
-        static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
+        static bool IsTargetIfa(const ifaddrs *ifa, const std::string &devName);
+
+        static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice &dev);
 
     public:
-        explicit ArpScanProcessor(const UserRequest &user_request, Logger& logger);
+        /**
+         * @brief Constructs an ArpScanProcessor.
+         * @param user_request The user's configuration for the scan.
+         * @param logger A logger instance for logging messages.
+         */
+        explicit ArpScanProcessor(const UserRequest &user_request, Logger &logger);
 
+        /**
+         * @brief Executes the ARP scan process.
+         *
+         * This method orchestrates the entire scan: finding the device, running
+         * the ArpScanner, and printing the results.
+         */
         void Process() override;
     };
 }

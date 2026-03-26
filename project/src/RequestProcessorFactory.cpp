@@ -5,7 +5,8 @@
 #include "InvalidRequestProcessor.hpp"
 
 std::unique_ptr<netmap::RequestProcessor>
-netmap::RequestProcessorFactory::CreateRequestProcessor(const UserRequest &user_request, const cxxopts::Options &options, Logger& logger) {
+netmap::RequestProcessorFactory::CreateRequestProcessor(const UserRequest &user_request,
+                                                        const cxxopts::Options &options, Logger &logger) {
     if (user_request.help) {
         return std::make_unique<HelpProcessor>(options.help(), logger);
     }

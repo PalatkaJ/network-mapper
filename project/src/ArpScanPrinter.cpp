@@ -31,14 +31,14 @@ void netmap::ArpScanPrinter::PrintBody(std::stringstream &ss) const {
 }
 
 void netmap::ArpScanPrinter::PrintHeader(std::stringstream &ss) const {
-    ss << " Interface:       " << (dev_wrapper_.device ? dev_wrapper_.device->getName() : "Unknown") << std::endl;
-    ss << " IPv4 Addr:       " << (dev_wrapper_.device ? dev_wrapper_.device->getIPv4Address().toString() : "N/A") << std::endl;
-    ss << " Default Gateway: " << (dev_wrapper_.device ? dev_wrapper_.device->getDefaultGateway().toString() : "N/A") << std::endl;
-    ss << " Netmask:         " << dev_wrapper_.netmask.toString() << std::endl;
+    ss << " Interface:        " << (dev_wrapper_.device ? dev_wrapper_.device->getName() : "Unknown") << std::endl;
+    ss << " Source IPv4 Addr: " << (dev_wrapper_.device ? dev_wrapper_.device->getIPv4Address().toString() : "N/A") << std::endl;
+    ss << " Default Gateway:  " << (dev_wrapper_.device ? dev_wrapper_.device->getDefaultGateway().toString() : "N/A") << std::endl;
+    ss << " Netmask:          " << dev_wrapper_.netmask.toString() << std::endl;
 }
 
-netmap::ArpScanPrinter::ArpScanPrinter(DevWrapperForArpScan dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger, PrinterConfig printer_config)
-    : ResultPrinter(logger, std::move(printer_config)), dev_wrapper_(dev_wrapper), arp_devices_found_(std::move(arp_devices_found)) {}
+netmap::ArpScanPrinter::ArpScanPrinter(DevWrapperForArpScan& dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger, PrinterConfig printer_config)
+    : ResultPrinter(logger, printer_config), dev_wrapper_(dev_wrapper), arp_devices_found_(std::move(arp_devices_found)) {}
 
 
 

@@ -8,8 +8,9 @@
 
 #include "Logger.hpp"
 
-netmap::MacVendorMapper::MacVendorMapper(std::string&& csv_filename, Logger& logger)
-    : csv_filename_(std::move(csv_filename)), logger_(logger) {}
+netmap::MacVendorMapper::MacVendorMapper(std::string &&csv_filename, Logger &logger)
+    : csv_filename_(std::move(csv_filename)), logger_(logger) {
+}
 
 void netmap::MacVendorMapper::Map() {
     logger_.VerboseLog(std::format("Parsing {} and mapping mac addresses to corresponding vendors", csv_filename_));
@@ -24,14 +25,14 @@ void netmap::MacVendorMapper::Map() {
 
     std::string line;
     // get rid of the header
-    (void)std::getline(file, line);
+    (void) std::getline(file, line);
 
     while (std::getline(file, line)) {
         ProcessLineEntry(line);
     }
 }
 
-std::string netmap::MacVendorMapper::ParseVendorName(const std::vector<std::string>& fields, const std::string &entry) {
+std::string netmap::MacVendorMapper::ParseVendorName(const std::vector<std::string> &fields, const std::string &entry) {
     std::string vendor_name = fields[VENDOR_NAME_INDEX];
 
     // ugly name parsing out of the .csv file, this is not a program that nicely reads and parses csv
@@ -45,7 +46,7 @@ std::string netmap::MacVendorMapper::ParseVendorName(const std::vector<std::stri
 
 void netmap::MacVendorMapper::ProcessLineEntry(const std::string &entry) {
     auto fields_view = entry | std::views::split(CSV_SEPARATOR);
-    auto fields = std::ranges::to<std::vector<std::string>>(fields_view);
+    auto fields = std::ranges::to<std::vector<std::string> >(fields_view);
 
     std::string vendor_name = ParseVendorName(fields, entry);
 
@@ -77,5 +78,3 @@ std::string netmap::MacVendorMapper::GetVendorName(const pcpp::MacAddress mac_ad
 
     return "Unknown";
 }
-
-

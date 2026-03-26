@@ -6,8 +6,8 @@
 #include "ArpLayer.h"
 #include "Packet.h"
 
-netmap::ArpReplyHandler::ArpReplyHandler(MacVendorMapper& mac_vendor_mapper, Logger &logger)
-    :mac_vendor_mapper_(mac_vendor_mapper), logger_(logger) {
+netmap::ArpReplyHandler::ArpReplyHandler(MacVendorMapper &mac_vendor_mapper, Logger &logger)
+    : mac_vendor_mapper_(mac_vendor_mapper), logger_(logger) {
     devices_ = {};
 }
 
@@ -18,6 +18,5 @@ void netmap::ArpReplyHandler::ProcessArpReply(const pcpp::Packet &parsedPacket) 
 
     auto vendor = mac_vendor_mapper_.GetVendorName(sender_mac);
 
-    logger_.VerboseLog(std::format("found {}      {}      {}", sender_ip.toString(),sender_mac.toString(), vendor));
     devices_.emplace_back(sender_mac, sender_ip, std::move(vendor));
 }
