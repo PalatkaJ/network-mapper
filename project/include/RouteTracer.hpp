@@ -1,11 +1,13 @@
-#ifndef NETWORK_MAPPER_ROUTE_TRACER_HPP
-#define NETWORK_MAPPER_ROUTE_TRACER_HPP
+#ifndef ROUTE_TRACER_HPP
+#define ROUTE_TRACER_HPP
 #include <IpAddress.h>
 #include <PcapLiveDevice.h>
 
+#include "DevWrapperForTraceroute.hpp"
 #include "IcmpReplyHandler.hpp"
 #include "Logger.hpp"
 #include "NetworkConstants.hpp"
+#include "TracerouteResult.hpp"
 
 namespace netmap {
     class RouteTracer {
@@ -13,16 +15,16 @@ namespace netmap {
         pcpp::IPv4Address dest_ip_;
         Logger& logger_;
         const UserRequest& user_request_;
+        DevWrapperForTraceroute& dev_wrapper_;
+
+        void FindRoute();
+        static void OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        RouteTracer(pcpp::IPv4Address source_ip, pcpp::IPv4Address dest_ip, Logger& logger, const UserRequest &user_request);
+        RouteTracer(DevWrapperForTraceroute& dev_wrapper, pcpp::IPv4Address source_ip, pcpp::IPv4Address dest_ip, Logger& logger, const UserRequest &user_request);
 
-        void FindRoute(pcpp::PcapLiveDevice* dev, pcpp::MacAddress gateway_mac);
-
-        static void OnIcmpPacketCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
-
-        IcmpReplyHandler Execute();
+        TracerouteResult Execute();
     };
 }
 
-#endif //NETWORK_MAPPER_ROUTE_TRACER_HPP
+#endif //ROUTE_TRACER_HPP

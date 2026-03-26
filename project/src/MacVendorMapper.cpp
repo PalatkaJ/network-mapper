@@ -23,7 +23,7 @@ void netmap::MacVendorMapper::Map() {
     }
 
     std::string line;
-    // get rid of the header, maybe we could parse some info from that if more lines of code needed
+    // get rid of the header
     (void)std::getline(file, line);
 
     while (std::getline(file, line)) {
@@ -52,12 +52,12 @@ void netmap::MacVendorMapper::ProcessLineEntry(const std::string &entry) {
     mac_vendor_map_.emplace(fields[MAC_PREFIX_INDEX], vendor_name);
 }
 
-bool netmap::MacVendorMapper::IsLocallyAdministrated(pcpp::MacAddress mac_address) {
+bool netmap::MacVendorMapper::IsLocallyAdministrated(const pcpp::MacAddress mac_address) {
     auto byte_array = mac_address.toByteArray();
     return (byte_array[0] & LOCALLY_ADMINISTERED_MASK) != 0;
 }
 
-std::string netmap::MacVendorMapper::GetVendorName(pcpp::MacAddress mac_address) {
+std::string netmap::MacVendorMapper::GetVendorName(const pcpp::MacAddress mac_address) {
     if (IsLocallyAdministrated(mac_address)) {
         return "Unknown: locally administrated";
     }

@@ -1,16 +1,15 @@
-#ifndef INTERFACE_SCANNING_PROCESSOR_H
-#define INTERFACE_SCANNING_PROCESSOR_H
+#ifndef ARP_SCAN_PROCESSOR_HPP
+#define ARP_SCAN_PROCESSOR_HPP
 #include <ifaddrs.h>
 #include <PcapLiveDevice.h>
 
 #include "RequestProcessor.hpp"
 #include "UserRequest.hpp"
-#include "PcapLiveDeviceWrapper.hpp"
+#include "DevWrapperForArpScan.hpp"
 
 namespace netmap {
     class ArpScanProcessor final : public RequestProcessor {
         const UserRequest &user_request_;
-        Logger& logger_;
 
         static bool IsTargetIfa(const ifaddrs *ifa, const std::string& devName);
         static pcpp::IPv4Address GetDeviceNetmask(const pcpp::PcapLiveDevice& dev);
@@ -23,4 +22,4 @@ namespace netmap {
 }
 
 
-#endif //INTERFACE_SCANNING_PROCESSOR_H
+#endif //ARP_SCAN_PROCESSOR_HPP

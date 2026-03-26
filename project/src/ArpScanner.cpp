@@ -3,7 +3,6 @@
 #include <IPv4Layer.h>
 #include <arpa/inet.h>
 
-#include <utility>
 
 #include "EthLayer.h"
 #include "Packet.h"
@@ -12,7 +11,7 @@
 #include "MacVendorMapper.hpp"
 
 pcpp::IPv4Address netmap::ArpScanner::GetStartingIpAddress() const {
-    auto starting_ip = wrappedDev_.device->getIPv4Address() & wrappedDev_.netmask;
+    auto starting_ip = dev_wrapper_.device->getIPv4Address() & dev_wrapper_.netmask;
 
     IncrementIpAddress(starting_ip); // increment because x.y.z.0 is reserved for the network itself (not a valid host ip)
     return starting_ip;
@@ -32,12 +31,12 @@ void netmap::ArpScanner::IncrementIpAddress(pcpp::IPv4Address& ip) {
 // are a lot of dependencies (such as the layers)
 void netmap::ArpScanner::BuildAndSendArpPacket(const pcpp::IPv4Address &ip) const {
     pcpp::ArpRequest request{
-        wrappedDev_.device->getMacAddress(),
-        wrappedDev_.device->getIPv4Address(),
+        dev_wrapper_.device->getMacAddress(),
+        dev_wrapper_.device->getIPv4Address(),
         ip,
     };
 
-    pcpp::EthLayer eth_layer(wrappedDev_.device->getMacAddress(), pcpp::MacAddress::Broadcast);
+    pcpp::EthLayer eth_layer(dev_wrapper_.device->getMacAddress(), pcpp::MacAddress::Broadcast);
     pcpp::ArpLayer arp_layer(request);
 
     pcpp::Packet arp_packet(100); // create a packet of capacity 100 - this will grow automatically
@@ -47,7 +46,7 @@ void netmap::ArpScanner::BuildAndSendArpPacket(const pcpp::IPv4Address &ip) cons
 
     arp_packet.computeCalculateFields();
 
-    wrappedDev_.device->sendPacket(*arp_packet.getRawPacket());
+    dev_wrapper_.device->sendPacket(*arp_packet.getRawPacket());
 }
 
 uint32_t netmap::ArpScanner::GetHostIntFromNetIp(const pcpp::IPv4Address &ip) {
@@ -57,22 +56,19 @@ uint32_t netmap::ArpScanner::GetHostIntFromNetIp(const pcpp::IPv4Address &ip) {
 void netmap::ArpScanner::SendArpRequests() const {
     auto current_ip = GetStartingIpAddress();
 
-    logger_.VerboseLog("Sending arp requests...");
-    // this would look really cool if I could do sth like for (auto ip: available_addresses) {...}
-    while ((GetHostIntFromNetIp(current_ip) | GetHostIntFromNetIp(wrappedDev_.netmask)) < UINT_MAX) {
+    while ((GetHostIntFromNetIp(current_ip) | GetHostIntFromNetIp(dev_wrapper_.netmask)) < UINT_MAX) {
         BuildAndSendArpPacket(current_ip);
 
         IncrementIpAddress(current_ip);
     }
 }
 
-netmap::ArpScanner::ArpScanner(PcapLiveDeviceWrapper &wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger,const UserRequest &user_request)
-    : wrappedDev_(wrappedDev), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), user_request_(user_request) {}
+netmap::ArpScanner::ArpScanner(DevWrapperForArpScan &dev_wrapper, MacVendorMapper& mac_vendor_mapper, Logger& logger,const UserRequest &user_request)
+    : dev_wrapper_(dev_wrapper), mac_vendor_mapper_(mac_vendor_mapper), logger_(logger), user_request_(user_request) {}
 
 void netmap::ArpScanner::PrepareDeviceForArpCapture() const {
-    logger_.VerboseLog("Preparing device for arp capture...");
     pcpp::ArpFilter arp_filter{pcpp::ARP_REPLY};
-    wrappedDev_.device->setFilter(arp_filter);
+    dev_wrapper_.device->setFilter(arp_filter);
 }
 
 void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie) {
@@ -83,21 +79,27 @@ void netmap::ArpScanner::OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcp
     reply_handler->ProcessArpReply(parsed_packet);
 }
 
-std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() {
-    wrappedDev_.device->open();
+std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() const {
+    dev_wrapper_.device->open();
 
+    logger_.VerboseLog("Preparing device for ARP capture");
     PrepareDeviceForArpCapture();
     ArpReplyHandler stats{mac_vendor_mapper_, logger_};
-    logger_.VerboseLog("Starting network scan...");
-    wrappedDev_.device->startCapture(OnArpReplyCapture, &stats);
 
+    logger_.VerboseLog("Start capturing ARP replies");
+    dev_wrapper_.device->startCapture(OnArpReplyCapture, &stats);
+
+    logger_.VerboseLog("Sending ARP requests");
     SendArpRequests();
+    logger_.VerboseLog("All ARP requests sent");
 
-    std::this_thread::sleep_for(static_cast<std::chrono::milliseconds>(user_request_.timeout_ms));
-    wrappedDev_.device->stopCapture();
-    wrappedDev_.device->close();
+    logger_.VerboseLog("Waiting for ARP replies");
+    std::this_thread::sleep_for(std::chrono::milliseconds(user_request_.timeout_ms));
 
-    logger_.VerboseLog("Finished network scan...");
+    logger_.VerboseLog("ARP replies received, stop capture");
+    dev_wrapper_.device->stopCapture();
+    dev_wrapper_.device->close();
+
     return stats.GetArpDevices();
 }
 

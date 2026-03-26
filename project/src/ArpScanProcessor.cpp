@@ -1,5 +1,5 @@
 #include "ArpScanProcessor.hpp"
-#include "PcapLiveDeviceWrapper.hpp"
+#include "DevWrapperForArpScan.hpp"
 #include "ArpScanner.hpp"
 #include "Logger.hpp"
 #include "MacVendorMapper.hpp"
@@ -51,11 +51,9 @@ pcpp::IPv4Address netmap::ArpScanProcessor::GetDeviceNetmask(const pcpp::PcapLiv
 }
 
 netmap::ArpScanProcessor::ArpScanProcessor(const UserRequest &user_request, Logger &logger)
-    :user_request_(user_request), logger_(logger) {}
+    : RequestProcessor(logger), user_request_(user_request) {}
 
 void netmap::ArpScanProcessor::Process() {
-    logger_.VerboseLog(std::format("Trying to find interface {}", user_request_.interface_name));
-
     auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByName(user_request_.interface_name);
     if (dev == nullptr) {
         throw std::runtime_error("Cannot find interface");
@@ -64,16 +62,19 @@ void netmap::ArpScanProcessor::Process() {
     logger_.VerboseLog(std::format("Interface {} found", dev->getName()));
 
     const auto netmask = GetDeviceNetmask(*dev);
+    logger_.VerboseLog(std::format("Netmask for interface {} found", dev->getName()));
 
     // wrap the device so it contains the netmask as well
-    PcapLiveDeviceWrapper wrappedDev(dev, netmask);
+    DevWrapperForArpScan wrappedDev(dev, netmask);
 
     auto mac_vendor_mapper = MacVendorMapper{"mac-vendors-export.csv", logger_};
     mac_vendor_mapper.Map();
+    logger_.VerboseLog("Mac addresses successfully mapped to corresponding vendors");
 
     auto arp_scanner = ArpScanner{wrappedDev, mac_vendor_mapper, logger_, user_request_};
-    auto scanned_devices = arp_scanner.ScanNetwork();
+    const auto scanned_devices = arp_scanner.ScanNetwork();
+    logger_.VerboseLog("Network scan finished");
 
-    auto network_printer = ArpScanPrinter{wrappedDev, scanned_devices, logger_};
+    const auto network_printer = ArpScanPrinter{wrappedDev, scanned_devices, logger_};
     network_printer.Print();
 }

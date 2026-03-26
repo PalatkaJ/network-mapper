@@ -1,5 +1,5 @@
-#ifndef NETWORK_MAPPER_RESULTPRINTER_HPP
-#define NETWORK_MAPPER_RESULTPRINTER_HPP
+#ifndef RESULT_PRINTER_HPP
+#define RESULT_PRINTER_HPP
 #include "Logger.hpp"
 #include "PrinterConfig.hpp"
 
@@ -20,4 +20,4 @@ namespace netmap {
     };
 }
 
-#endif //NETWORK_MAPPER_RESULTPRINTER_HPP
+#endif //RESULT_PRINTER_HPP

@@ -1,5 +1,5 @@
-#ifndef NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP
-#define NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP
+#ifndef MAC_VENDOR_MAPPER_HPP
+#define MAC_VENDOR_MAPPER_HPP
 #include <MacAddress.h>
 #include <unordered_map>
 
@@ -30,4 +30,4 @@ namespace netmap {
     };
 }
 
-#endif //NETWORK_MAPPER_MAC_VENDOR_MAPPER_HPP
+#endif //MAC_VENDOR_MAPPER_HPP

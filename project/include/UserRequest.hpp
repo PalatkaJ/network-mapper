@@ -1,5 +1,5 @@
-#ifndef SCAN_REQUEST_HPP
-#define SCAN_REQUEST_HPP
+#ifndef USER_REQUEST_HPP
+#define USER_REQUEST_HPP
 #include <string>
 #include "cxxopts.hpp"
 
@@ -20,4 +20,4 @@ namespace netmap {
     };
 }
 
-#endif //SCAN_REQUEST_HPP
+#endif //USER_REQUEST_HPP

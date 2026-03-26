@@ -1,5 +1,5 @@
-#ifndef NETWORK_MAPPER_LOGGERFACTORY_HPP
-#define NETWORK_MAPPER_LOGGERFACTORY_HPP
+#ifndef LOGGER_FACTORY_HPP
+#define LOGGER_FACTORY_HPP
 #include <memory>
 
 #include "Logger.hpp"
@@ -11,4 +11,4 @@ namespace netmap {
     };
 }
 
-#endif //NETWORK_MAPPER_LOGGERFACTORY_HPP
+#endif //LOGGER_FACTORY_HPP

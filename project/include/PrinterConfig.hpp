@@ -1,5 +1,5 @@
-#ifndef NETWORK_MAPPER_PRINTERCONFIG_HPP
-#define NETWORK_MAPPER_PRINTERCONFIG_HPP
+#ifndef PRINTER_CONFIG_HPP
+#define PRINTER_CONFIG_HPP
 
 #include <cstddef>
 
@@ -11,4 +11,4 @@ namespace netmap {
     };
 }
 
-#endif //NETWORK_MAPPER_PRINTERCONFIG_HPP
+#endif //PRINTER_CONFIG_HPP

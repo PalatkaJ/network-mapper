@@ -1,26 +1,27 @@
-#ifndef OPTION_HANDLER_HPP
-#define OPTION_HANDLER_HPP
+#ifndef REQUEST_PROCESSOR_HPP
+#define REQUEST_PROCESSOR_HPP
 #include "cxxopts.hpp"
 #include "Logger.hpp"
-#include "ResultPrinter.hpp"
-
 
 namespace netmap {
     class RequestProcessor {
+    protected:
+        Logger& logger_;
     public:
+        explicit RequestProcessor(Logger& logger);
         virtual ~RequestProcessor() = default;
 
         virtual void Process() = 0;
     };
 
     class HelpProcessor final : public RequestProcessor {
-        std::string help_;
+        std::string_view help_;
 
     public:
-        explicit HelpProcessor(std::string help);
+        explicit HelpProcessor(std::string_view help, Logger& logger);
 
         void Process() override;
     };
 }
 
-#endif //OPTION_HANDLER_HPP
+#endif //REQUEST_PROCESSOR_HPP

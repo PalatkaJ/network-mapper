@@ -1,16 +1,15 @@
-#ifndef ARPSCANNER_HPP
-#define ARPSCANNER_HPP
-#include <iostream>
+#ifndef ARP_SCANNER_HPP
+#define ARP_SCANNER_HPP
 
 #include "ArpDeviceInfo.hpp"
 #include "Logger.hpp"
 #include "MacVendorMapper.hpp"
-#include "PcapLiveDeviceWrapper.hpp"
+#include "DevWrapperForArpScan.hpp"
 
 
 namespace netmap {
     class ArpScanner {
-        PcapLiveDeviceWrapper& wrappedDev_;
+        DevWrapperForArpScan& dev_wrapper_;
         MacVendorMapper& mac_vendor_mapper_;
         Logger& logger_;
         const UserRequest &user_request_;
@@ -25,11 +24,11 @@ namespace netmap {
         static void OnArpReplyCapture(pcpp::RawPacket *rawPacket, const pcpp::PcapLiveDevice *iface, void *cookie);
 
     public:
-        explicit ArpScanner(PcapLiveDeviceWrapper& wrappedDev, MacVendorMapper& mac_vendor_mapper, Logger& logger, const UserRequest &user_request);
+        explicit ArpScanner(DevWrapperForArpScan& dev_wrapper, MacVendorMapper& mac_vendor_mapper, Logger& logger, const UserRequest &user_request);
 
-        std::vector<ArpDeviceInfo> ScanNetwork();
+        std::vector<ArpDeviceInfo> ScanNetwork() const;
     };
 }
 
 
-#endif //ARPSCANNER_HPP
+#endif //ARP_SCANNER_HPP

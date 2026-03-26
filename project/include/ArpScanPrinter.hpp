@@ -1,13 +1,13 @@
-#ifndef NETWORK_MAPPER_NETWORK_ASCI_PRINTER_HPP
-#define NETWORK_MAPPER_NETWORK_ASCI_PRINTER_HPP
+#ifndef ARP_SCAN_PRINTER_HPP
+#define ARP_SCAN_PRINTER_HPP
 #include "ArpDeviceInfo.hpp"
 #include "Logger.hpp"
-#include "PcapLiveDeviceWrapper.hpp"
+#include "DevWrapperForArpScan.hpp"
 #include "ResultPrinter.hpp"
 
 namespace netmap {
     class ArpScanPrinter: public ResultPrinter {
-        PcapLiveDeviceWrapper dev_wrapper_;
+        DevWrapperForArpScan dev_wrapper_;
         std::vector<ArpDeviceInfo> arp_devices_found_;
 
     protected:
@@ -15,7 +15,7 @@ namespace netmap {
         void PrintHeader(std::stringstream &ss) const override;
         [[nodiscard]] inline std::string GetTitle() const override;
     public:
-        ArpScanPrinter(PcapLiveDeviceWrapper dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger, PrinterConfig printer_config = PrinterConfig());
+        ArpScanPrinter(DevWrapperForArpScan dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger, PrinterConfig printer_config = PrinterConfig());
     };
 
     inline std::string ArpScanPrinter::GetTitle() const {
@@ -23,4 +23,4 @@ namespace netmap {
     }
 }
 
-#endif //NETWORK_MAPPER_NETWORK_ASCI_PRINTER_HPP
+#endif //ARP_SCAN_PRINTER_HPP

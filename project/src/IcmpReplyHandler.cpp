@@ -23,7 +23,13 @@ void netmap::IcmpReplyHandler::ProcessEchoReply(pcpp::IcmpLayer *icmp_layer) {
     auto request_id = icmp_layer->getEchoReplyData()->header->id;
     request_id = ntohs(request_id);
     hit_ips_[request_id] = dynamic_cast<pcpp::IPv4Layer *>(icmp_layer->getPrevLayer())->getSrcIPv4Address();
-    dest_hit_ = true;
+
+    {
+        std::lock_guard lock(mutex_);
+        dest_hit_ = true;
+    }
+
+    cv_.notify_one();
 }
 
 void netmap::IcmpReplyHandler::ProcessTimeExceeded(const pcpp::IcmpLayer *icmp_layer) {

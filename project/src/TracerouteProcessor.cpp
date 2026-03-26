@@ -5,9 +5,12 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <IpAddress.h>
+#include <NetworkUtils.h>
+#include <PcapLiveDeviceList.h>
 #include <arpa/inet.h>
 #include <net/if.h>
 
+#include "DevWrapperForTraceroute.hpp"
 #include "RouteTracer.hpp"
 #include "TracerouteResultPrinter.hpp"
 
@@ -24,6 +27,8 @@ pcpp::IPv4Address netmap::TracerouteProcessor::ExtractDestIpAddress(const UserRe
 }
 
 pcpp::IPv4Address netmap::TracerouteProcessor::DNSResolveIp(const std::string &domain_name) {
+    logger_.VerboseLog(std::format("Resolving IP for domain name: {}", domain_name));
+
     addrinfo hints{}, *res = nullptr;
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -38,8 +43,6 @@ pcpp::IPv4Address netmap::TracerouteProcessor::DNSResolveIp(const std::string &d
 
     pcpp::IPv4Address res_ip(ipv4_addr->sin_addr.s_addr);
 
-    logger_.VerboseLog(std::format("Extracted host addr: {}", res_ip.toString()));
-
     freeaddrinfo(res);
     return res_ip;
 }
@@ -53,7 +56,7 @@ pcpp::IPv4Address netmap::TracerouteProcessor::GetMyIp() {
     ifaddrs *ifap = nullptr;
 
     if (getifaddrs(&ifap) != 0) {
-        throw std::runtime_error("parsing network interfaces on machine failed");
+        throw std::runtime_error("Parsing network interfaces on machine failed");
     }
 
     for (const ifaddrs *ifa = ifap; ifa != nullptr; ifa = ifa->ifa_next) {
@@ -70,20 +73,39 @@ pcpp::IPv4Address netmap::TracerouteProcessor::GetMyIp() {
 
     freeifaddrs(ifap);
 
-    throw std::runtime_error("could not find proper network interface");
+    throw std::runtime_error("Could not find proper network interface");
 }
 
 netmap::TracerouteProcessor::TracerouteProcessor(const UserRequest &user_request, Logger &logger)
-    : user_request_(user_request),logger_(logger){}
+    : RequestProcessor(logger), user_request_(user_request) {}
 
 
 void netmap::TracerouteProcessor::Process() {
     auto dest_ip = ExtractDestIpAddress(user_request_);
+    logger_.VerboseLog(std::format("Extracted destination IP addr: {}", dest_ip.toString()));
     auto my_ip = GetMyIp();
+    logger_.VerboseLog(std::format("Source IP used: {}", my_ip.toString()));
 
-    auto route_tracer = RouteTracer{my_ip, dest_ip, logger_, user_request_};
-    auto stats = route_tracer.Execute();
+    auto *dev = pcpp::PcapLiveDeviceList::getInstance().getDeviceByIp(my_ip);
 
-    auto traceroute_printer = TracerouteResultPrinter{stats.GetHitIps(), stats.IsDestHit(), dest_ip, logger_};
+    if (dev == nullptr) {
+        throw std::runtime_error{std::format("Could not find proper network interface to use")};
+    }
+
+    logger_.VerboseLog(std::format("Interface that will be used: {}", dev->getName()));
+
+
+    auto net_utils = pcpp::NetworkUtils::getInstance();
+    double arp_response_time = 1000.0;
+
+    auto gateway_mac = net_utils.getMacAddress(dev->getDefaultGateway(), dev, arp_response_time, dev->getMacAddress(), my_ip);
+    logger_.VerboseLog(std::format("Resolved gateway mac to: {}", gateway_mac.toString()));
+    auto dev_wrapper = DevWrapperForTraceroute{dev, gateway_mac};
+
+    auto route_tracer = RouteTracer{dev_wrapper, my_ip, dest_ip, logger_, user_request_};
+    auto result = route_tracer.Execute();
+    logger_.VerboseLog("Traceroute finished");
+
+    auto traceroute_printer = TracerouteResultPrinter{result.hops, result.destination_reached, result.dest_ip, logger_};
     traceroute_printer.Print();
 }

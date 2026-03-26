@@ -2,10 +2,12 @@
 
 #include <iostream>
 
-netmap::HelpProcessor::HelpProcessor(std::string help)
-    : help_(std::move(help)) {
-}
+netmap::RequestProcessor::RequestProcessor(Logger &logger)
+    : logger_(logger) {}
+
+netmap::HelpProcessor::HelpProcessor(std::string_view help, Logger &logger)
+    : RequestProcessor(logger), help_(help) {}
 
 void netmap::HelpProcessor::Process() {
-    std::cout << help_ << std::endl;
+    logger_.Log(help_);
 }

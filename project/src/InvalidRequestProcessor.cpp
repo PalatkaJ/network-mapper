@@ -1,7 +1,7 @@
 #include "InvalidRequestProcessor.hpp"
 
 netmap::InvalidRequestProcessor::InvalidRequestProcessor(Logger &logger)
-    : logger_(logger) {}
+    : RequestProcessor(logger) {}
 
 
 void netmap::InvalidRequestProcessor::Process() {
