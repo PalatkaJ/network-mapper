@@ -5,6 +5,7 @@
 #include <MacAddress.h>
 #include <ranges>
 #include <vector>
+#include <format>
 
 #include "Logger.hpp"
 
