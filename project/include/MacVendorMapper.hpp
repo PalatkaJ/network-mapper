@@ -2,6 +2,7 @@
 #define MAC_VENDOR_MAPPER_HPP
 #include <MacAddress.h>
 #include <unordered_map>
+#include <vector>
 
 #include "Logger.hpp"
 
