@@ -5,6 +5,7 @@
 #include <Packet.h>
 #include <array>
 #include <mutex>
+#include <condition_variable>
 
 #include "Logger.hpp"
 #include "NetworkConstants.hpp"
