@@ -5,6 +5,10 @@
 #include "DevWrapperForArpScan.hpp"
 #include "ResultPrinter.hpp"
 
+#include <vector>
+#include <sstream>
+#include <string>
+
 namespace netmap {
     /**
      * @brief Formats and prints the results of an ARP scan.

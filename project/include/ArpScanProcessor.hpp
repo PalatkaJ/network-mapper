@@ -5,6 +5,7 @@
 #include "RequestProcessor.hpp"
 #include "UserRequest.hpp"
 
+#include <string>
 
 namespace netmap {
     /**

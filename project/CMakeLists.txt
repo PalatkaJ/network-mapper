@@ -14,6 +14,12 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 # Create executable target
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+set(DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data")
+
+target_compile_definitions(network-mapper PRIVATE
+        DATA_PATH="${DATA_DIR}"
+)
+
 # Include directories
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include

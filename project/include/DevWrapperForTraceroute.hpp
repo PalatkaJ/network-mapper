@@ -1,6 +1,7 @@
 #ifndef DEV_WRAPPER_FOR_TRACEROUTE_HPP
 #define DEV_WRAPPER_FOR_TRACEROUTE_HPP
 #include <PcapLiveDevice.h>
+#include <MacAddress.h>
 
 namespace netmap {
     /**

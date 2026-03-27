@@ -1,4 +1,5 @@
 #include "InvalidRequestProcessor.hpp"
+#include "cxxopts.hpp"
 
 netmap::InvalidRequestProcessor::InvalidRequestProcessor(Logger &logger)
     : RequestProcessor(logger) {

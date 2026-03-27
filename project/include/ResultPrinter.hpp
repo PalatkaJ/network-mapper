@@ -2,6 +2,8 @@
 #define RESULT_PRINTER_HPP
 #include "Logger.hpp"
 #include "PrinterConfig.hpp"
+#include <string>
+#include <sstream>
 
 namespace netmap {
     /**

@@ -15,7 +15,7 @@ netmap::MacVendorMapper::MacVendorMapper(std::string &&csv_filename, Logger &log
 void netmap::MacVendorMapper::Map() {
     logger_.VerboseLog(std::format("Parsing {} and mapping mac addresses to corresponding vendors", csv_filename_));
 
-    const auto full_path = std::format("../data/{}", csv_filename_);
+    const auto full_path = std::format("{}/{}", DATA_PATH, csv_filename_);
 
     std::ifstream file(full_path);
 

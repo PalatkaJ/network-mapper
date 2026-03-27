@@ -7,6 +7,9 @@
 #include "DevWrapperForArpScan.hpp"
 #include "UserRequest.hpp"
 
+#include <RawPacket.h>
+#include <PcapLiveDevice.h>
+#include <vector>
 
 namespace netmap {
     /**

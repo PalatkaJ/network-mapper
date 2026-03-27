@@ -3,6 +3,7 @@
 #include <MacAddress.h>
 #include <unordered_map>
 #include <vector>
+#include <string>
 
 #include "Logger.hpp"
 

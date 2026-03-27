@@ -1,7 +1,6 @@
 #ifndef APPLICATION_CONTROLLER_HPP
 #define APPLICATION_CONTROLLER_HPP
 #include "cxxopts.hpp"
-#include "Logger.hpp"
 
 /**
  * @brief Main controller for the network scanning application.

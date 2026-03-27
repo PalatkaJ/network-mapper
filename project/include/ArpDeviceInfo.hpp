@@ -4,6 +4,8 @@
 
 #include <IpAddress.h>
 #include <MacAddress.h>
+#include <string>
+
 
 
 namespace netmap {

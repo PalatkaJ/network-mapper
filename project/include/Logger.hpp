@@ -1,6 +1,8 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 #include <ostream>
+#include <memory>
+#include <string_view>
 
 /**
  * @brief Provides a simple logging mechanism.

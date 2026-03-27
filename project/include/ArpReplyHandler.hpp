@@ -6,6 +6,8 @@
 #include "Logger.hpp"
 #include "MacVendorMapper.hpp"
 
+#include <vector>
+
 namespace netmap {
     constexpr size_t ARP_DEV_RESERVE = 254;
 

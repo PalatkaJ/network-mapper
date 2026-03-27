@@ -2,6 +2,9 @@
 #define REQUEST_PROCESSOR_FACTORY_HPP
 #include "RequestProcessor.hpp"
 #include "UserRequest.hpp"
+#include "cxxopts.hpp"
+#include "Logger.hpp"
+#include <memory>
 
 namespace netmap {
     /**

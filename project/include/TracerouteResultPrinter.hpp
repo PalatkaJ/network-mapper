@@ -2,9 +2,12 @@
 #define TRACEROUTE_RESULT_PRINTER_HPP
 #include <IpAddress.h>
 #include <array>
+#include <string>
+#include <sstream>
 
 #include "ResultPrinter.hpp"
 #include "NetworkConstants.hpp"
+#include "PrinterConfig.hpp"
 
 namespace netmap {
     /**

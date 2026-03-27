@@ -4,10 +4,10 @@
 #include <PcapLiveDevice.h>
 
 #include "DevWrapperForTraceroute.hpp"
-#include "IcmpReplyHandler.hpp"
 #include "Logger.hpp"
 #include "TracerouteResult.hpp"
 #include "UserRequest.hpp"
+#include "RawPacket.h"
 
 namespace netmap {
     /**

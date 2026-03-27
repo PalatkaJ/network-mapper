@@ -1,7 +1,8 @@
 #ifndef REQUEST_PROCESSOR_HPP
 #define REQUEST_PROCESSOR_HPP
-#include "cxxopts.hpp"
+
 #include "Logger.hpp"
+#include <string_view>
 
 namespace netmap {
     /**

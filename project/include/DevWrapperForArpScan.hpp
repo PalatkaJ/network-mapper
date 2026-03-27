@@ -1,6 +1,7 @@
 #ifndef DEV_WRAPPER_FOR_ARP_SCAN_HPP
 #define DEV_WRAPPER_FOR_ARP_SCAN_HPP
 #include <PcapLiveDevice.h>
+#include <IpAddress.h>
 
 namespace netmap {
     /**
