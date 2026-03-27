@@ -3,7 +3,6 @@ project(network-mapper)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
 # Find dependencies
 find_package(PcapPlusPlus CONFIG REQUIRED)

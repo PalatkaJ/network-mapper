@@ -47,7 +47,13 @@ std::string netmap::MacVendorMapper::ParseVendorName(const std::vector<std::stri
 
 void netmap::MacVendorMapper::ProcessLineEntry(const std::string &entry) {
     auto fields_view = entry | std::views::split(CSV_SEPARATOR);
-    auto fields = std::ranges::to<std::vector<std::string> >(fields_view);
+
+    std::vector<std::string> fields;
+
+    // I had troubles with std::ranges::to on machines with older gcc
+    for (auto&& field_range : fields_view) {
+        fields.emplace_back(field_range.begin(), field_range.end());
+    }
 
     std::string vendor_name = ParseVendorName(fields, entry);
 
