@@ -1,8 +1,16 @@
 #include <cxxopts.hpp>
 #include <iostream>
+#include <unistd.h>
 
 #include "ApplicationController.hpp"
 #include "ApplicationConstants.hpp"
+
+void check_root_privileges() {
+    if (geteuid() != 0) {
+        throw std::runtime_error("This program must be run with root privileges (sudo). "
+                                 "Required for raw socket access (ARP/Sniffing).");
+    }
+}
 
 int main(int argc, char *argv[]) {
     auto options = cxxopts::Options("network-mapper",
@@ -19,6 +27,7 @@ int main(int argc, char *argv[]) {
              cxxopts::value<std::string>());
 
     try {
+        check_root_privileges();
         const cxxopts::ParseResult result = options.parse(argc, argv);
         ApplicationController::Run(options, result);
     } catch (const cxxopts::exceptions::specification &se) {
