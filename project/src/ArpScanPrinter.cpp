@@ -37,8 +37,8 @@ void netmap::ArpScanPrinter::PrintHeader(std::stringstream &ss) const {
     ss << " Netmask:          " << dev_wrapper_.netmask.toString() << std::endl;
 }
 
-netmap::ArpScanPrinter::ArpScanPrinter(DevWrapperForArpScan& dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger& logger, PrinterConfig printer_config)
-    : ResultPrinter(logger, printer_config), dev_wrapper_(dev_wrapper), arp_devices_found_(std::move(arp_devices_found)) {}
+netmap::ArpScanPrinter::ArpScanPrinter(DevWrapperForArpScan& dev_wrapper, const std::vector<ArpDeviceInfo>& arp_devices_found, Logger& logger, PrinterConfig printer_config)
+    : ResultPrinter(logger, printer_config), dev_wrapper_(dev_wrapper), arp_devices_found_(arp_devices_found) {}
 
 
 

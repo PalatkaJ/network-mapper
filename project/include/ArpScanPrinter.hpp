@@ -14,7 +14,7 @@ namespace netmap {
      */
     class ArpScanPrinter : public ResultPrinter {
         DevWrapperForArpScan& dev_wrapper_;
-        std::vector<ArpDeviceInfo> arp_devices_found_;
+        const std::vector<ArpDeviceInfo>& arp_devices_found_;
 
     protected:
         /**
@@ -43,7 +43,7 @@ namespace netmap {
          * @param logger A logger instance.
          * @param printer_config Configuration for the printer.
          */
-        ArpScanPrinter(DevWrapperForArpScan &dev_wrapper, std::vector<ArpDeviceInfo> arp_devices_found, Logger &logger,
+        ArpScanPrinter(DevWrapperForArpScan &dev_wrapper, const std::vector<ArpDeviceInfo>& arp_devices_found, Logger &logger,
                        PrinterConfig printer_config = PrinterConfig());
     };
 

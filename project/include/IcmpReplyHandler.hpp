@@ -18,11 +18,10 @@ namespace netmap {
      * condition variable) to signal when the trace is complete.
      */
     class IcmpReplyHandler {
-        Logger &logger_;
         std::array<pcpp::IPv4Address, MAX_HOPS> hit_ips_;
-
         std::mutex mutex_;
         std::condition_variable cv_;
+        Logger &logger_;
         bool dest_hit_ = false;
 
         void ProcessIcmpReply(pcpp::IcmpLayer *icmp_layer);

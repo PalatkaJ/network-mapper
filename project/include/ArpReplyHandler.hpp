@@ -7,6 +7,8 @@
 #include "MacVendorMapper.hpp"
 
 namespace netmap {
+    constexpr size_t ARP_DEV_RESERVE = 254;
+
     /**
      * @brief Processes ARP reply packets to identify and store device information.
      *
@@ -39,11 +41,11 @@ namespace netmap {
          * This method moves the internal list of devices to the caller.
          * @return A vector of ArpDeviceInfo objects.
          */
-        const std::vector<ArpDeviceInfo>& GetArpDevices();
+        std::vector<ArpDeviceInfo> StealArpDevices();
     };
 
-    inline const std::vector<ArpDeviceInfo>& ArpReplyHandler::GetArpDevices() {
-        return devices_;
+    inline std::vector<ArpDeviceInfo> ArpReplyHandler::StealArpDevices() {
+        return std::move(devices_);
     }
 }
 

@@ -90,6 +90,7 @@ std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() const {
 
     logger_.VerboseLog("Preparing device for ARP capture");
     PrepareDeviceForArpCapture();
+
     ArpReplyHandler stats{mac_vendor_mapper_, logger_};
 
     logger_.VerboseLog("Start capturing ARP replies");
@@ -106,7 +107,7 @@ std::vector<netmap::ArpDeviceInfo> netmap::ArpScanner::ScanNetwork() const {
     dev_wrapper_.device->stopCapture();
     dev_wrapper_.device->close();
 
-    return stats.GetArpDevices();
+    return stats.StealArpDevices();
 }
 
 

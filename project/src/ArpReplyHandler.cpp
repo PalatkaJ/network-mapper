@@ -9,6 +9,7 @@
 netmap::ArpReplyHandler::ArpReplyHandler(MacVendorMapper &mac_vendor_mapper, Logger &logger)
     : mac_vendor_mapper_(mac_vendor_mapper), logger_(logger) {
     devices_ = {};
+    devices_.reserve(ARP_DEV_RESERVE);
 }
 
 void netmap::ArpReplyHandler::ProcessArpReply(const pcpp::Packet &parsedPacket) {
