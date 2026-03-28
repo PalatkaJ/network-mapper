@@ -37,7 +37,7 @@ namespace netmap {
      * @brief A concrete processor for displaying the help message.
      */
     class HelpProcessor final : public RequestProcessor {
-        std::string_view help_;
+        std::string help_;
 
     public:
         /**
@@ -45,7 +45,7 @@ namespace netmap {
          * @param help The help message string to be displayed.
          * @param logger A logger instance.
          */
-        explicit HelpProcessor(std::string_view help, Logger &logger);
+        explicit HelpProcessor(std::string&& help, Logger &logger);
 
         /**
          * @brief Processes the request by printing the help message to the console.

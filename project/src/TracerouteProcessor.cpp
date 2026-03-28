@@ -82,7 +82,14 @@ netmap::TracerouteProcessor::TracerouteProcessor(const UserRequest &user_request
 
 
 void netmap::TracerouteProcessor::Process() {
-    auto dest_ip = ExtractDestIpAddress(user_request_);
+    pcpp::IPv4Address dest_ip;
+
+    try {
+        dest_ip = ExtractDestIpAddress(user_request_);
+    } catch (const std::invalid_argument &e) {
+        throw cxxopts::exceptions::parsing{e.what()};
+    }
+
     logger_.VerboseLog(std::format("Extracted destination IP addr: {}", dest_ip.toString()));
     auto my_ip = GetMyIp();
     logger_.VerboseLog(std::format("Source IP used: {}", my_ip.toString()));

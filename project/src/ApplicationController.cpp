@@ -1,4 +1,7 @@
 #include "ApplicationController.hpp"
+
+#include <iostream>
+
 #include "cxxopts.hpp"
 #include "ArpScanProcessor.hpp"
 #include "InvalidRequestProcessor.hpp"
@@ -15,10 +18,12 @@ void ApplicationController::Run(const cxxopts::Options &options, const cxxopts::
     const auto request_processor = netmap::RequestProcessorFactory::CreateRequestProcessor(
         user_request, options, *logger);
 
+    request_processor->Process();
+    /*
     try {
-        request_processor->Process();
     } catch (const std::exception &e) {
         auto processor = netmap::InvalidRequestProcessor{*logger};
         processor.Process();
     }
+    */
 }

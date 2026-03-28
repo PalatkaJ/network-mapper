@@ -1,9 +1,14 @@
 #include <cxxopts.hpp>
 #include <iostream>
 #include <unistd.h>
+#include <string>
 
 #include "ApplicationController.hpp"
 #include "ApplicationConstants.hpp"
+
+constexpr char HELP_HEADER[] =
+    "CL tool implementing subset of arp-scan and traceroute functionality\n"
+    "[!] WARNING: This tool requires root privileges for raw socket access.";
 
 void check_root_privileges() {
     if (geteuid() != 0) {
@@ -13,8 +18,7 @@ void check_root_privileges() {
 }
 
 int main(int argc, char *argv[]) {
-    auto options = cxxopts::Options("network-mapper",
-                                    "CL tool implementing subset of arp-scan and traceroute functionality");
+    auto options = cxxopts::Options("network-mapper",HELP_HEADER);
 
     options.add_options()
             ("i,interface", "Network interface name to sniff on", cxxopts::value<std::string>())
@@ -25,6 +29,9 @@ int main(int argc, char *argv[]) {
              cxxopts::value<uint32_t>())
             ("d, destination", "Trace the route to the provided destination (IP address or domain name).",
              cxxopts::value<std::string>());
+
+    options.custom_help("[OPTION...]\n\nNote that options --interface and --destination are mutually exclusive, so "
+        "use just one at a time");
 
     try {
         check_root_privileges();
