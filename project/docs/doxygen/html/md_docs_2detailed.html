@@ -101,8 +101,9 @@ Source code organization</h2>
 <p>The source code is organized into three main parts:</p><ul>
 <li>app – application controller (the orchestrator), common interface for both arp-scan and traceroute, some factories, logger</li>
 <li>arp-scan – everything related to the arp-scan functionality, from the request processor to the result presentation</li>
-<li>traceroute – everything related to the traceroute functionality Detailed documentation of each class is provided in the generated Doxygen documentation.</li>
+<li>traceroute – everything related to the traceroute functionality</li>
 </ul>
+<p>Detailed documentation of each class is provided in the generated Doxygen documentation.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Implementation Problematics and Solutions</h2>
 <p>I decided that I did not want to spend too much time on parsing the command line arguments, which meant using some external library. I chose <span class="tt">cxxopts</span> because it seemed fast and easy to use. For the network packets management, I chose PcapPlusPlus library because it seemed to be the most complete and documented library – with a lot of examples as well, which made it easy to understand how to use it. Also note some design patterns used in the code, e.g., the factory pattern for request processor/ logger creations or template method used for the presentation of the results. </p>
@@ -113,8 +114,9 @@ Arp scan</h3>
 Traceroute</h3>
 <p>Firstly, I had to take care of the domain name resolving if the user does not provide a correct IP but rather the domain name. After all, it was pretty simple; there are some c functions that do exactly that. Then the logic is quite simple: send a packet with a TTL incremented each time with the destination IP set and see what happens. I found two ways to do it:</p><ul>
 <li>start the capture, send some packets with such incrementing TTL, wait for the responses and then present the results to the user (that is exactly what the official <span class="tt">traceroute</span> tool does)</li>
-<li>start the capture, send some packets with such incrementing TTL, but do not wait for all other responses, just stop when we reach the destination or when the timeout is reached. I implemented the first approach first, which was way easier, the logic was exactly the same as in the arp scanner, just a different way of filtering the responses. The second approach I preferred and wanted to implement because I was exhausted of how long the traceroute tool takes to finish. For that I had to introduce some more advanced c++ concepts, such as <span class="tt">std::mutex</span> and <span class="tt">std::condition_variable</span>. After some time I was able to implement it, and it is much faster than the first approach (you can try to compare it yourself). It also has some downsides, such as the possibility of missing some responses, but after some testing it seems to be working fine most of the time, and it outputs exactly the same results as the official <span class="tt">traceroute</span> tool. </li>
+<li>start the capture, send some packets with such incrementing TTL, but do not wait for all other responses, just stop when we reach the destination or when the timeout is reached.</li>
 </ul>
+<p>I implemented the first approach first, which was way easier, the logic was exactly the same as in the arp scanner, just a different way of filtering the responses. The second approach I preferred and wanted to implement because I was exhausted of how long the traceroute tool takes to finish. For that I had to introduce some more advanced c++ concepts, such as <span class="tt">std::mutex</span> and <span class="tt">std::condition_variable</span>. After some time I was able to implement it, and it is much faster than the first approach (you can try to compare it yourself). It also has some downsides, such as the possibility of missing some responses. However, after some testing it seems to be working fine most of the time, and it outputs exactly the same results as the official <span class="tt">traceroute</span> tool only way faster. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
