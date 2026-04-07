@@ -20,6 +20,7 @@ The source code is organized into three main parts:
 - arp-scan – everything related to the arp-scan functionality, from the 
   request processor to the result presentation
 - traceroute – everything related to the traceroute functionality
+
 Detailed documentation of each class is provided in the generated Doxygen 
   documentation.
 
@@ -63,14 +64,16 @@ destination IP set and see what happens. I found two ways to do it:
 - start the capture, send some packets with such incrementing TTL, but do 
   not wait for all other responses, just stop when we reach the destination 
   or when the timeout is reached.
+
 I implemented the first approach first, which was way easier, the logic was 
-  exactly the same as in the arp scanner, just a different way of filtering 
-  the responses. The second approach I preferred and wanted to implement 
-  because I was exhausted of how long the traceroute tool takes to finish. 
-  For that I had to introduce some more advanced c++ concepts, such as 
-  `std::mutex` and `std::condition_variable`. After some time I was able to 
-  implement it, and it is much faster than the first approach (you can try 
-  to compare it yourself). It also has 
-  some downsides, such as the possibility of missing some responses, but 
-  after some testing it seems to be working fine most of the time, and it 
-  outputs exactly the same results as the official `traceroute` tool.
+exactly the same as in the arp scanner, just a different way of filtering 
+the responses. The second approach I preferred and wanted to implement 
+because I was exhausted of how long the traceroute tool takes to finish. 
+For that I had to introduce some more advanced c++ concepts, such as 
+`std::mutex` and `std::condition_variable`. After some time I was able to 
+implement it, and it is much faster than the first approach (you can try 
+to compare it yourself). It also has 
+some downsides, such as the possibility of missing some responses. However, 
+after some testing it seems to be working fine most of the time, and it 
+outputs exactly the same results as the official `traceroute` tool only way 
+faster.

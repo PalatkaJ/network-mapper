@@ -1,12 +1,12 @@
 # Network Mapper
 Let me introduce you to Network Mapper. It is a command line tool for mapping 
-network topology, it is written in C++, and it works on MacOS and Linux 
+network topology, it is written in C++, and it works on macOS and Linux 
 machines. Let's dig into the functionality this 
 tool provides, and then we will see how to use it.
 
 ## Arp Scanning
 Using this functionality, you can scan the network for devices that are connected to 
-it. For example, let's say you are connected to some wi-fi (at your home, or
+it. For example, let's say you are connected to some wi-fi (at your home, 
 university, office...) and you are interested in seeing how many other devices 
 are connected as well. You can use Network Mapper to do this. It also allows 
 you to see their IP and MAC addresses, and if you are lucky enough, it will 
@@ -18,8 +18,9 @@ scan. We will dig a little deeper into this later on.
 An extension to this project is the traceroute functionality. It allows you to 
 see how many hops it takes to reach a destination domain name or IP address. 
 Let me also introduce an example. I guess that you are using google.com a 
-lot. Ever wondered how long it takes to reach it? Well, you can use Network Mapper 
-to do this; it helps you map the routers your packet to google.com goes 
+lot. Ever wondered how long it takes to reach it (in some network metric)? 
+Well, you can use Network Mapper to do this; 
+it helps you map the routers your packet to google.com goes 
 through! It shows you the IP addresses of the routers, and it is really fast 
 (you can compare it to the standard traceroute tool, which took a different 
 approach to the same problem).
@@ -50,14 +51,14 @@ it will print the results.
 
 ## Usage and examples
 After running the `install.sh` script, the built executable is located in the 
-`build` directory, so go ahead and take a look there: 
-```
-cd build
+`build` directory, so go ahead and take a look there. Note that you
+can also build the project with CMake, using:
+```shell
+cmake -S . -B build && cmake --build build
 ```
 You will see the executable `network-mapper` in there. Now you can play with 
 it, just remember to run it with root privileges. A great start is to run 
 `sudo ./network-mapper --help` to see the available options.
-
 ## Simple Arp Scanning Example
 After running the following command (note that the interface you will want 
 to scan on will depend on your OS, you can use `ifconfig` to find out - for 
