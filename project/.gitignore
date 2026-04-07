@@ -2,3 +2,4 @@
 temp/*
 cmake-build-debug/*
 count_lines.sh
+.DS_Store

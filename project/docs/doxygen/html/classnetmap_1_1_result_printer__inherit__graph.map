@@ -1,0 +1,7 @@
+<map id="netmap::ResultPrinter" name="netmap::ResultPrinter">
+<area shape="rect" id="Node000001" title="Abstract base class for printing formatted results." alt="" coords="153,5,313,344"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_arp_scan_printer.html" title="Formats and prints the results of an ARP scan." alt="" coords="5,407,225,684"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,355,162,408,157,406,174,360"/>
+<area shape="rect" id="Node000003" href="$classnetmap_1_1_traceroute_result_printer.html" title="Formats and prints the results of a traceroute operation." alt="" coords="249,392,451,699"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="291,355,304,392,299,391,290,360"/>
+</map>

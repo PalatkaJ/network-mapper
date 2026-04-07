@@ -1,0 +1,9 @@
+<map id="netmap::UserRequest::isValid" name="netmap::UserRequest::isValid">
+<area shape="rect" id="Node000001" title="Validates the user request to ensure it is coherent." alt="" coords="592,5,742,46"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_request_processor_factory.html#ae0f46817141f5431e760405d12df49f4" title="Creates the appropriate RequestProcessor based on the user&#39;s request." alt="" coords="324,5,544,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="574,26,545,28,545,23,580,26"/>
+<area shape="rect" id="Node000003" href="$class_application_controller.html#ac7d20478f54a1d183975e09c095ef704" title="Executes the main application logic based on parsed command&#45;line options." alt="" coords="103,13,276,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,26,276,28,276,23,311,26"/>
+<area shape="rect" id="Node000004" href="$main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,13,55,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="85,27,55,28,55,23,89,25"/>
+</map>

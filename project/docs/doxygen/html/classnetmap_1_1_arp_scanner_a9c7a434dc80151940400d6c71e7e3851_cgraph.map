@@ -1,0 +1,5 @@
+<map id="netmap::ArpScanner::ScanNetwork" name="netmap::ArpScanner::ScanNetwork">
+<area shape="rect" id="Node000001" title="Executes the ARP scan." alt="" coords="5,5,146,46"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_arp_reply_handler.html#ac921876d01de190c75091f1352717800" title="Retrieves the list of discovered devices." alt="" coords="194,5,365,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,23,181,25,175,26,146,28"/>
+</map>

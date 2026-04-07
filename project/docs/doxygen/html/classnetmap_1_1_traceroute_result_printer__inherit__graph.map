@@ -1,0 +1,5 @@
+<map id="netmap::TracerouteResultPrinter" name="netmap::TracerouteResultPrinter">
+<area shape="rect" id="Node000001" title="Formats and prints the results of a traceroute operation." alt="" coords="5,392,207,699"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_result_printer.html" title="Abstract base class for printing formatted results." alt="" coords="26,5,186,344"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,356,109,392,104,391,106,361"/>
+</map>

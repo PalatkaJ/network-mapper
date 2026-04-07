@@ -3,14 +3,15 @@
 #include <unistd.h>
 #include <string>
 
-#include "ApplicationController.hpp"
-#include "ApplicationConstants.hpp"
+#include "app/ApplicationController.hpp"
 
 constexpr char HELP_HEADER[] =
     "CL tool implementing subset of arp-scan and traceroute functionality\n"
     "[!] WARNING: This tool requires root privileges for raw socket access.";
 
-void check_root_privileges() {
+constexpr int RUNTIME_ERROR_CODE = 1;
+
+static void check_root_privileges() {
     if (geteuid() != 0) {
         throw std::runtime_error("This program must be run with root privileges (sudo). "
                                  "Required for raw socket access (ARP/Sniffing).");

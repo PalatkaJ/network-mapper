@@ -1,0 +1,9 @@
+<map id="netmap::ResultPrinter::Print" name="netmap::ResultPrinter::Print">
+<area shape="rect" id="Node000001" title="Prints the complete formatted result to the configured output." alt="" coords="5,71,154,111"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_result_printer.html#a273c9017c72af6fedbb20c0d235115e9" title="Gets the title for the output." alt="" coords="202,5,350,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,68,200,50,196,53,144,73"/>
+<area shape="rect" id="Node000003" href="$classnetmap_1_1_result_printer.html#a5c623ea96612a33c43124ce55a5a49d9" title="Prints the main body of the output." alt="" coords="202,71,350,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,88,189,90,184,92,155,94"/>
+<area shape="rect" id="Node000004" href="$classnetmap_1_1_result_printer.html#a1aa1cd48e8baad2f63bfdfde5d2c5571" title="Prints the header section of the output." alt="" coords="202,136,350,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,109,201,130,196,131,142,115"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="netmap::ResultPrinter" name="netmap::ResultPrinter">
+<area shape="rect" id="Node000001" title="Abstract base class for printing formatted results." alt="" coords="110,243,270,546"/>
+<area shape="rect" id="Node000002" href="$class_logger.html" title="Provides a simple logging mechanism." alt="" coords="5,5,187,172"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,170,141,227,136,228,121,175"/>
+<area shape="rect" id="Node000003" href="$structnetmap_1_1_printer_config.html" title="Holds configuration settings for result printers." alt="" coords="212,35,357,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,140,244,228,239,226,267,145"/>
+</map>

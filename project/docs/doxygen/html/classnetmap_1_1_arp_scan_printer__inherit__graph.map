@@ -1,0 +1,5 @@
+<map id="netmap::ArpScanPrinter" name="netmap::ArpScanPrinter">
+<area shape="rect" id="Node000001" title="Formats and prints the results of an ARP scan." alt="" coords="5,392,225,669"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_result_printer.html" title="Abstract base class for printing formatted results." alt="" coords="35,5,195,344"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,356,118,392,113,392,115,361"/>
+</map>

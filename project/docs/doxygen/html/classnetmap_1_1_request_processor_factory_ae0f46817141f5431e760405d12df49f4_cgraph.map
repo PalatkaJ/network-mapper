@@ -1,0 +1,5 @@
+<map id="netmap::RequestProcessorFactory::CreateRequestProcessor" name="netmap::RequestProcessorFactory::CreateRequestProcessor">
+<area shape="rect" id="Node000001" title="Creates the appropriate RequestProcessor based on the user&#39;s request." alt="" coords="5,5,226,46"/>
+<area shape="rect" id="Node000002" href="$structnetmap_1_1_user_request.html#a1b13f446c2f7e33b13c422a3513dddc7" title="Validates the user request to ensure it is coherent." alt="" coords="274,5,423,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,23,261,26,256,26,226,28"/>
+</map>

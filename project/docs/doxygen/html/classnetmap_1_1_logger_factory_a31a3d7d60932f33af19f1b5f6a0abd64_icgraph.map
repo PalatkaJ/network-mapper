@@ -1,0 +1,7 @@
+<map id="netmap::LoggerFactory::CreateLogger" name="netmap::LoggerFactory::CreateLogger">
+<area shape="rect" id="Node000001" title="Creates a Logger instance based on user request settings." alt="" coords="324,5,479,46"/>
+<area shape="rect" id="Node000002" href="$class_application_controller.html#ac7d20478f54a1d183975e09c095ef704" title="Executes the main application logic based on parsed command&#45;line options." alt="" coords="103,13,276,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,26,276,28,276,23,311,26"/>
+<area shape="rect" id="Node000003" href="$main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,13,55,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,27,55,28,55,23,89,25"/>
+</map>

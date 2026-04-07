@@ -1,0 +1,3 @@
+<map id="netmap::IcmpReplyHandler" name="netmap::IcmpReplyHandler">
+<area shape="rect" id="Node000001" title="Processes ICMP reply packets, primarily for traceroute functionality." alt="" coords="5,5,223,248"/>
+</map>

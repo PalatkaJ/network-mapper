@@ -1,0 +1,9 @@
+<map id="netmap::ArpScanPrinter" name="netmap::ArpScanPrinter">
+<area shape="rect" id="Node000001" title="Formats and prints the results of an ARP scan." alt="" coords="80,596,300,873"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_result_printer.html" title="Abstract base class for printing formatted results." alt="" coords="110,243,270,546"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,559,192,597,187,595,189,564"/>
+<area shape="rect" id="Node000003" href="$class_logger.html" title="Provides a simple logging mechanism." alt="" coords="5,5,187,172"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,170,141,227,136,228,122,175"/>
+<area shape="rect" id="Node000004" href="$structnetmap_1_1_printer_config.html" title="Holds configuration settings for result printers." alt="" coords="212,35,357,142"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="269,140,244,228,239,227,267,145"/>
+</map>

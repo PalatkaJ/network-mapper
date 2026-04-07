@@ -8,8 +8,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(PcapPlusPlus CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 
-# Collect source files
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+set(SOURCES
+        src/main.cpp
+        src/app/ApplicationController.cpp
+        src/app/InvalidRequestProcessor.cpp
+        src/app/Logger.cpp
+        src/app/LoggerFactory.cpp
+        src/app/RequestProcessor.cpp
+        src/app/RequestProcessorFactory.cpp
+        src/app/ResultPrinter.cpp
+        src/app/ResultPrinter.cpp
+        src/app/UserRequest.cpp
+        src/arp-scan/ArpDeviceInfo.cpp
+        src/arp-scan/ArpReplyHandler.cpp
+        src/arp-scan/ArpScanner.cpp
+        src/arp-scan/ArpScanPrinter.cpp
+        src/arp-scan/ArpScanProcessor.cpp
+        src/arp-scan/DevWrapperForArpScan.cpp
+        src/arp-scan/MacVendorMapper.cpp
+        src/traceroute/DevWrapperForTraceroute.cpp
+        src/traceroute/IcmpReplyHandler.cpp
+        src/traceroute/RouteTracer.cpp
+        src/traceroute/TracerouteProcessor.cpp
+        src/traceroute/TracerouteResultPrinter.cpp
+)
 
 # Create executable target
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -21,7 +43,7 @@ target_compile_definitions(network-mapper PRIVATE
 )
 
 # Include directories
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 

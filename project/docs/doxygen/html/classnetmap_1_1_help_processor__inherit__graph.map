@@ -1,0 +1,5 @@
+<map id="netmap::HelpProcessor" name="netmap::HelpProcessor">
+<area shape="rect" id="Node000001" title="A concrete processor for displaying the help message." alt="" coords="16,190,174,307"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_request_processor.html" title="Abstract base class for processing a user request." alt="" coords="5,5,184,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,155,97,191,92,190,94,160"/>
+</map>

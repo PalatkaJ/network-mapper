@@ -1,0 +1,5 @@
+<map id="netmap::InvalidRequestProcessor" name="netmap::InvalidRequestProcessor">
+<area shape="rect" id="Node000001" title="A request processor for handling invalid user input." alt="" coords="5,190,213,292"/>
+<area shape="rect" id="Node000002" href="$classnetmap_1_1_request_processor.html" title="Abstract base class for processing a user request." alt="" coords="20,5,199,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,155,112,191,107,190,108,159"/>
+</map>

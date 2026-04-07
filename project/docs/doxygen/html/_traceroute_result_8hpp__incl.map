@@ -1,0 +1,11 @@
+<map id="include/traceroute/TracerouteResult.hpp" name="include/traceroute/TracerouteResult.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="160,5,311,46"/>
+<area shape="rect" id="Node000002" href="$_network_constants_8hpp.html" title="Defines constants related to network operations and protocols." alt="" coords="5,94,186,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,48,131,88,129,84,203,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="210,94,261,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="237,44,238,80,233,77,234,49"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="284,94,376,120"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="260,44,307,84,301,84,258,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="63,168,128,193"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,118,98,153,93,151,94,122"/>
+</map>
