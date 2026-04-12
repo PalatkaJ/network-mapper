@@ -51,8 +51,8 @@ it will print the results.
 
 ## Usage and examples
 After running the `install.sh` script, the built executable is located in the 
-`build` directory, so go ahead and take a look there. Note that you
-can also build the project with CMake, using:
+`build` directory, so go ahead and take a look there. Note that after you
+install everything, you can also build the project with CMake, using:
 ```shell
 cmake -S . -B build && cmake --build build
 ```
