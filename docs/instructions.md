@@ -28,8 +28,8 @@ approach to the same problem).
 ## Installing and building
 Building Network Mapper is really easy. Firstly clone the repository:
 ```shell
-git clone https://gitlab.mff.cuni.cz/teaching/nprg041/2025-26/repetenti/palatkaj.git
-cd palatkaj/project
+git clone https://github.com/PalatkaJ/network-mapper.git
+cd network-mapper
 ```
 It is a standard CMake project, and it uses vcpkg to manage its dependencies. 
 So make sure you have CMake and vcpkg installed, 
